@@ -19,19 +19,19 @@
             <form id="add-canteen-form">
                 <div class="form-group">
                     <label for="canteen-name">Kantinens navn:</label>
-                    <input type="text" id="canteen-name" required>
+                    <input type="text" id="canteen-name" name="name" required>
                 </div>
                 <div class="form-group">
                     <label for="company-name">Bedrift/Organisasjon:</label>
-                    <input type="text" id="company-name" required>
+                    <input type="text" id="company-name" name="company" required>
                 </div>
                 <div class="form-group">
                     <label for="location">Sted:</label>
-                    <input type="text" id="location" required>
+                    <input type="text" id="location" name="location" required>
                 </div>
                 <div class="form-group">
                     <label for="description">Beskrivelse:</label>
-                    <textarea id="description" rows="3"></textarea>
+                    <textarea id="description" name="description" rows="3"></textarea>
                 </div>
                 <button type="submit">Legg til kantine</button>
             </form>
@@ -83,7 +83,7 @@
                 </div>
                 <div class="form-group">
                     <label for="rating-comment">Kommentar (valgfri):</label>
-                    <textarea id="rating-comment" rows="3" placeholder="Del din opplevelse..."></textarea>
+                    <textarea id="rating-comment" name="comment" rows="3" placeholder="Del din opplevelse..."></textarea>
                 </div>
                 <button type="submit">Send vurdering</button>
             </form>
@@ -95,41 +95,6 @@
     </footer>
 
     <!-- Firebase SDKs -->
-    <script type="module">
-        try {
-            // Import the functions you need from the SDKs you need
-            const { initializeApp } = await import('https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js');
-            const { getFirestore, collection, addDoc, getDocs, query, orderBy, updateDoc, doc, increment, arrayUnion } = await import('https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js');
-
-            // Firebase configuration (users will need to replace with their own)
-            const firebaseConfig = {
-                // Replace with your Firebase config
-                apiKey: "your-api-key",
-                authDomain: "your-project.firebaseapp.com",
-                projectId: "your-project-id",
-                storageBucket: "your-project.appspot.com",
-                messagingSenderId: "123456789",
-                appId: "your-app-id"
-            };
-
-            // Initialize Firebase
-            const app = initializeApp(firebaseConfig);
-            const db = getFirestore(app);
-
-            // Make Firebase available globally
-            window.db = db;
-            window.firestore = { collection, addDoc, getDocs, query, orderBy, updateDoc, doc, increment, arrayUnion };
-            window.firebaseReady = true;
-            
-            // Dispatch event to let app know Firebase is ready
-            window.dispatchEvent(new Event('firebaseReady'));
-        } catch (error) {
-            console.log('Firebase CDN not available, running in demo mode:', error.message);
-            window.firebaseReady = false;
-            // Dispatch event to let app know to use demo mode
-            window.dispatchEvent(new Event('firebaseReady'));
-        }
-    </script>
-    <script src="app.js"></script>
+    <script type="module" src="app.js"></script>
 </body>
 </html>

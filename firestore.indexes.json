@@ -1,0 +1,16 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "canteens",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "createdAt",
+          "order": "DESCENDING"
+        }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}
+

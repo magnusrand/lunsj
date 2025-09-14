@@ -1,0 +1,12 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Allow read access to canteens for all users
+    match /canteens/{document} {
+      allow read: if true;
+      // Only allow writes through Cloud Functions
+      allow write: if false;
+    }
+  }
+}
+
