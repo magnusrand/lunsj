@@ -14,7 +14,7 @@ This application uses Firebase Functions for server-side operations and Firestor
 1. In your Firebase project console, click on "Firestore Database" in the left sidebar
 2. Click "Create database"
 3. Choose "Start in test mode" for development (remember to secure it later for production)
-4. Select a location close to your users (e.g., europe-west3 for Norway)
+4. Select a location close to your users (e.g., europe-west1 for Norway - closest and most cost-effective)
 
 ## 3. Enable Firebase Functions
 
@@ -45,9 +45,9 @@ This application uses Firebase Functions for server-side operations and Firestor
 
 ## 5. Deploy Firebase Functions
 
-1. Navigate to the functions directory:
+1. Navigate to the server directory:
    ```bash
-   cd functions
+   cd server
    ```
 
 2. Install dependencies:
@@ -149,3 +149,5 @@ The application uses the following Firebase Functions:
 - Ensure your Firebase project has Firestore and Functions enabled
 - If Functions are not working, check that they are deployed: `firebase deploy --only functions`
 - Check Firebase Functions logs: `firebase functions:log`
+- Functions are now located in the `server` directory instead of `functions`
+- Functions are configured to run in `europe-west1` region for optimal performance in Norway
