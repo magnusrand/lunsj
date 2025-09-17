@@ -1,140 +1,171 @@
 <!DOCTYPE html>
 <html lang="no">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Lunsj - Lunsjsteder i Norge</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.7/dist/htmx.min.js" integrity="sha384-ZBXiYtYQ6hJ2Y0ZNoYuI+Nq5MqWBr+chMrS/RkXpNzQCApHEhOt2aY8EJgqwHLkJ" crossorigin="anonymous"></script>
-</head>
-<body>
+    <link rel="stylesheet" href="styles.css" />
+    <script
+      src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.7/dist/htmx.min.js"
+      integrity="sha384-ZBXiYtYQ6hJ2Y0ZNoYuI+Nq5MqWBr+chMrS/RkXpNzQCApHEhOt2aY8EJgqwHLkJ"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
     <header>
-        <h1>🍽️ Lunsj</h1>
-        <p>Finn og vurder lunsjsteder i Norge</p>
+      <h1>🍽️ Lunsj</h1>
+      <p>Finn og vurder lunsjsteder i Norge</p>
     </header>
 
     <main id="main-content">
-        <!-- Add New Lunch Place Section -->
-        <section id="add-lunchplace-section">
-            <h2>Legg til nytt lunsjsted</h2>
-            <form id="add-lunchplace-form" 
-                  hx-post="/api/lunchplace" 
-                  hx-target="#lunchplaces-list" 
-                  hx-swap="beforeend"
-                  hx-on::after-request="this.reset()">
-                <div class="form-group">
-                    <label for="company-name">Bedrift/Organisasjon:</label>
-                    <input type="text" id="company-name" name="company" required>
-                </div>
-                <div class="form-group">
-                    <label for="location">Sted:</label>
-                    <input type="text" id="location" name="location" required>
-                </div>
-                <div class="form-group">
-                    <label for="serving-type">Serveringstype:</label>
-                    <select id="serving-type" name="servingType" required>
-                        <option value="">Velg serveringstype</option>
-                        <option value="løsvekt">Løsvekt buffet</option>
-                        <option value="all-you-can-eat">All you can eat buffet</option>
-                        <option value="a-la-carte">À la carte</option>
-                        <option value="kiosk">Kiosk</option>
-                        <option value="meal-of-the-day">Dagens rett</option>
-                        <option value="cafeteria">Kafeteria</option>
-                        <option value="other">Annet</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="price-per-serving">Pris per porsjon (kr):</label>
-                    <input type="number" id="price-per-serving" name="pricePerServing" min="0" step="0.01">
-                </div>
-                <div class="form-group">
-                    <label for="price-per-month">Pris per måned (kr):</label>
-                    <input type="number" id="price-per-month" name="pricePerMonth" min="0" step="0.01">
-                </div>
-                <div class="form-group">
-                    <label for="description">Beskrivelse:</label>
-                    <textarea id="description" name="description" rows="3"></textarea>
-                </div>
-                <button type="submit">Legg til lunsjsted</button>
-            </form>
-        </section>
+      <!-- Add New Lunch Place Section -->
+      <section id="add-lunchplace-section">
+        <h2>Legg til nytt lunsjsted</h2>
+        <form
+          id="add-lunchplace-form"
+          hx-post="/api/lunchplace"
+          hx-target="#lunchplaces-list"
+          hx-swap="beforeend"
+          hx-on::after-request="this.reset()"
+        >
+          <div class="form-group">
+            <label for="company-name">Bedrift/Organisasjon:</label>
+            <input type="text" id="company-name" name="company" required />
+          </div>
+          <div class="form-group">
+            <label for="location">Sted:</label>
+            <input type="text" id="location" name="location" required />
+          </div>
+          <div class="form-group">
+            <label for="serving-type">Serveringstype:</label>
+            <select id="serving-type" name="servingType" required>
+              <option value="">Velg serveringstype</option>
+              <option value="løsvekt">Løsvekt buffet</option>
+              <option value="all-you-can-eat">All you can eat buffet</option>
+              <option value="a-la-carte">À la carte</option>
+              <option value="kiosk">Kiosk</option>
+              <option value="meal-of-the-day">Dagens rett</option>
+              <option value="cafeteria">Kafeteria</option>
+              <option value="other">Annet</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="price-per-serving">Pris per porsjon (kr):</label>
+            <input
+              type="number"
+              id="price-per-serving"
+              name="pricePerServing"
+              min="0"
+              step="0.01"
+            />
+          </div>
+          <div class="form-group">
+            <label for="price-per-month">Pris per måned (kr):</label>
+            <input
+              type="number"
+              id="price-per-month"
+              name="pricePerMonth"
+              min="0"
+              step="0.01"
+            />
+          </div>
+          <div class="form-group">
+            <label for="description">Beskrivelse:</label>
+            <textarea id="description" name="description" rows="3"></textarea>
+          </div>
+          <button type="submit">Legg til lunsjsted</button>
+        </form>
+      </section>
 
-        <!-- Filter Section -->
-        <section id="filter-section">
-            <h2>Søk og filtrer</h2>
-            <div class="filter-controls">
-                <input type="text" 
-                       id="search-input" 
-                       name="search"
-                       placeholder="Søk etter bedrift eller sted..."
-                       hx-get="/api/lunchplaces"
-                       hx-target="#lunchplaces-list"
-                       hx-trigger="input changed delay:300ms"
-                       hx-include="[name='sort']">
-                <select id="sort-select" 
-                        name="sort"
-                        hx-get="/api/lunchplaces"
-                        hx-target="#lunchplaces-list"
-                        hx-trigger="change"
-                        hx-include="[name='search']">
-                    <option value="company">Sorter etter bedrift</option>
-                    <option value="rating">Sorter etter vurdering</option>
-                    <option value="location">Sorter etter sted</option>
-                    <option value="servingType">Sorter etter serveringstype</option>
-                </select>
-            </div>
-        </section>
+      <!-- Filter Section -->
+      <section id="filter-section">
+        <h2>Søk og filtrer</h2>
+        <div class="filter-controls">
+          <input
+            type="text"
+            id="search-input"
+            name="search"
+            placeholder="Søk etter bedrift eller sted..."
+            hx-get="/api/lunchplaces"
+            hx-target="#lunchplaces-list"
+            hx-trigger="input changed delay:300ms"
+            hx-include="[name='sort']"
+          />
+          <select
+            id="sort-select"
+            name="sort"
+            hx-get="/api/lunchplaces"
+            hx-target="#lunchplaces-list"
+            hx-trigger="change"
+            hx-include="[name='search']"
+          >
+            <option value="company">Sorter etter bedrift</option>
+            <option value="rating">Sorter etter vurdering</option>
+            <option value="location">Sorter etter sted</option>
+            <option value="servingType">Sorter etter serveringstype</option>
+          </select>
+        </div>
+      </section>
 
-        <!-- Lunch Places List Section -->
-        <section id="lunchplaces-section">
-            <h2>Lunsjsteder</h2>
-            <div id="lunchplaces-list" class="lunchplaces-grid">
-                <!-- Lunch places will be loaded here dynamically -->
-            </div>
-        </section>
+      <!-- Lunch Places List Section -->
+      <section id="lunchplaces-section">
+        <h2>Lunsjsteder</h2>
+        <div
+          id="lunchplaces-list"
+          class="lunchplaces-grid"
+          hx-get="/api/lunchplaces"
+          hx-trigger="load"
+        >
+          <!-- Lunch places will be loaded here dynamically -->
+        </div>
+      </section>
     </main>
 
     <!-- Rating Modal -->
     <div id="rating-modal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h3>Vurder lunsjsted</h3>
-            <div id="modal-lunchplace-info"></div>
-            <form id="rating-form" 
-                  hx-post="/api/rating" 
-                  hx-target="#modal-lunchplace-info" 
-                  hx-swap="afterend"
-                  hx-on::after-request="closeRatingModal()">
-                <div class="rating-input">
-                    <label>Vurdering (1-5 stjerner):</label>
-                    <div class="star-rating">
-                        <input type="radio" id="star5" name="rating" value="5">
-                        <label for="star5">★</label>
-                        <input type="radio" id="star4" name="rating" value="4">
-                        <label for="star4">★</label>
-                        <input type="radio" id="star3" name="rating" value="3">
-                        <label for="star3">★</label>
-                        <input type="radio" id="star2" name="rating" value="2">
-                        <label for="star2">★</label>
-                        <input type="radio" id="star1" name="rating" value="1">
-                        <label for="star1">★</label>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="rating-comment">Kommentar (valgfri):</label>
-                    <textarea id="rating-comment" name="comment" rows="3" placeholder="Del din opplevelse..."></textarea>
-                </div>
-                <button type="submit">Send vurdering</button>
-            </form>
-        </div>
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h3>Vurder lunsjsted</h3>
+        <div id="modal-lunchplace-info"></div>
+        <form
+          id="rating-form"
+          hx-post="/api/rating"
+          hx-target="#modal-lunchplace-info"
+          hx-swap="afterend"
+          hx-on::after-request="closeRatingModal()"
+        >
+          <div class="rating-input">
+            <label>Vurdering (1-5 stjerner):</label>
+            <div class="star-rating">
+              <input type="radio" id="star5" name="rating" value="5" />
+              <label for="star5">★</label>
+              <input type="radio" id="star4" name="rating" value="4" />
+              <label for="star4">★</label>
+              <input type="radio" id="star3" name="rating" value="3" />
+              <label for="star3">★</label>
+              <input type="radio" id="star2" name="rating" value="2" />
+              <label for="star2">★</label>
+              <input type="radio" id="star1" name="rating" value="1" />
+              <label for="star1">★</label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="rating-comment">Kommentar (valgfri):</label>
+            <textarea
+              id="rating-comment"
+              name="comment"
+              rows="3"
+              placeholder="Del din opplevelse..."
+            ></textarea>
+          </div>
+          <button type="submit">Send vurdering</button>
+        </form>
+      </div>
     </div>
 
     <footer>
-        <p>&copy; 2024 Lunsj - Lunsjsteder i Norge</p>
+      <p>&copy; 2024 Lunsj - Lunsjsteder i Norge</p>
     </footer>
-
-    
-    <!-- App JavaScript (load after HTMX) -->
     <script type="module" src="app.js"></script>
-</body>
+  </body>
 </html>

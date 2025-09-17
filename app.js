@@ -1,4 +1,28 @@
 // Simple Lunsj App - HTMX-powered lunch place app
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import {
+  getFunctions,
+  connectFunctionsEmulator,
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-functions.js";
+
+// Firebase configuration
+const firebaseConfig = {
+  projectId: "god-lunsj",
+  // Add other config if needed
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const functions = getFunctions(app, "europe-west1");
+
+// Connect to emulator in development
+if (
+  window.location.hostname === "localhost" ||
+  window.location.hostname === "127.0.0.1"
+) {
+  connectFunctionsEmulator(functions, "127.0.0.1", 5001);
+}
+
 let currentLunchPlaceId = null;
 
 // DOM elements
@@ -9,7 +33,7 @@ const closeModal = document.querySelector(".close");
 // Initialize app
 document.addEventListener("DOMContentLoaded", function () {
   setupEventListeners();
-  loadInitialLunchPlaces();
+  // HTMX will handle initial load via hx-trigger="load" on the lunchplaces-list div
 });
 
 function setupEventListeners() {
@@ -22,16 +46,6 @@ function setupEventListeners() {
   });
 }
 
-// Load initial lunch places using HTMX
-function loadInitialLunchPlaces() {
-  // Make sure HTMX is loaded before using it
-  if (typeof htmx !== "undefined") {
-    htmx.trigger("#search-input", "input");
-  } else {
-    console.warn("HTMX not loaded yet, retrying...");
-    setTimeout(loadInitialLunchPlaces, 100);
-  }
-}
 
 // Open rating modal
 function openRatingModal(lunchPlaceId) {

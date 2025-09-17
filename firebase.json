@@ -18,6 +18,9 @@
     "firestore": {
       "port": 8080
     },
+    "hosting": {
+      "port": 5002
+    },
     "ui": {
       "enabled": true
     },
@@ -29,15 +32,24 @@
     "rewrites": [
       {
         "source": "/api/lunchplaces",
-        "function": "getLunchPlacesList"
+        "function": {
+          "functionId": "getLunchPlacesList",
+          "region": "europe-west1"
+        }
       },
       {
         "source": "/api/lunchplace",
-        "function": "addLunchPlaceAPI"
+        "function": {
+          "functionId": "addLunchPlaceAPI",
+          "region": "europe-west1"
+        }
       },
       {
         "source": "/api/rating",
-        "function": "addRatingAPI"
+        "function": {
+          "functionId": "addRatingAPI",
+          "region": "europe-west1"
+        }
       },
       {
         "source": "**",
