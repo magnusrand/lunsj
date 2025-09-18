@@ -28,7 +28,16 @@
   },
   "hosting": {
     "public": ".",
-    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**",
+      "server/**",
+      "public/**",
+      "*.md",
+      "*.log",
+      "dev-server.sh"
+    ],
     "rewrites": [
       {
         "source": "/api/lunchplaces",
@@ -55,6 +64,7 @@
         "source": "**",
         "destination": "/index.html"
       }
-    ]
+    ],
+    "errorDocument": "404.html"
   }
 }
