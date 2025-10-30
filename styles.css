@@ -1,3 +1,11 @@
+:root {
+    --clr-green: #ACBF6D;   /* primary */
+    --clr-cream: #FDDD9F;   /* light bg */
+    --clr-yellow: #FDCF60;  /* accent */
+    --clr-orange: #F5B058;  /* accent */
+    --clr-salmon: #EC8063;  /* danger/accent */
+}
+
 /* Reset and base styles */
 * {
     margin: 0;
@@ -9,30 +17,92 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.6;
     color: #333;
-    background-color: #f5f5f5;
+    background-color: var(--clr-cream);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
 }
 
+/* Topbar */
+.topbar {
+    background: #ffffff;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 1px solid var(--clr-cream);
+}
+
+.topbar-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0.75rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo {
+    font-weight: 700;
+    color: #4a4a4a;
+}
+
+.topbar-btn {
+    padding: 0.6rem 1rem;
+}
+
 /* Header */
-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+header.hero {
+    background: var(--clr-green);
     color: white;
-    padding: 2rem 0;
-    text-align: center;
+    padding: 3rem 0 2.5rem;
+    text-align: left;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
-header h1 {
+header.hero h1 {
     font-size: 3rem;
     margin-bottom: 0.5rem;
     font-weight: 300;
 }
 
-header p {
-    font-size: 1.2rem;
+.hero-sub {
+    margin-top: 0.25rem;
     opacity: 0.9;
+}
+
+.hero-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+}
+
+.hero-search {
+    margin-top: 1.25rem;
+}
+
+.input-pill {
+    width: 100%;
+    max-width: 700px;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #fff;
+    border-radius: 999px;
+    border: 2px solid rgba(0,0,0,0.05);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    padding: 0.5rem 0.75rem;
+}
+
+.input-icon { opacity: 0.6; }
+
+.input-field {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: 0.6rem 0.25rem;
+    font-size: 1.05rem;
+    background: transparent;
 }
 
 /* Main content */
@@ -56,7 +126,7 @@ section {
 section h2 {
     margin-bottom: 1.5rem;
     color: #333;
-    border-bottom: 2px solid #667eea;
+    border-bottom: 2px solid var(--clr-green);
     padding-bottom: 0.5rem;
     font-weight: 400;
 }
@@ -84,12 +154,12 @@ input, textarea, select {
 
 input:focus, textarea:focus, select:focus {
     outline: none;
-    border-color: #667eea;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    border-color: var(--clr-green);
+    box-shadow: 0 0 0 3px rgba(172, 191, 109, 0.2);
 }
 
 button {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: var(--clr-green);
     color: white;
     border: none;
     padding: 1rem 2rem;
@@ -102,32 +172,34 @@ button {
     letter-spacing: 1px;
 }
 
+/* Shared button variants */
+.btn { display: inline-block; border-radius: 999px; padding: 0.6rem 1rem; font-weight: 600; border: 2px solid transparent; }
+.btn-primary { background: var(--clr-green); color: #fff; }
+.btn-outline { background: #fff; color: var(--clr-green); border-color: var(--clr-green); }
+.btn-small { padding: 0.4rem 0.75rem; font-size: 0.9rem; }
+
 button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 5px 15px rgba(172, 191, 109, 0.4);
 }
 
 button:active {
     transform: translateY(0);
 }
 
-/* Filter controls */
-.filter-controls {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 1rem;
-}
+/* Filter controls (legacy) */
+.filter-controls { display: none; }
 
-/* Canteens grid */
-.canteens-grid {
+/* Lunchplaces grid */
+.lunchplaces-grid, .canteens-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 2rem;
     margin-top: 2rem;
 }
 
-/* Canteen card */
-.canteen-card {
+/* Lunchplace card */
+.lunchplace-card, .canteen-card {
     background: white;
     border-radius: 10px;
     padding: 1.5rem;
@@ -136,26 +208,26 @@ button:active {
     border: 1px solid #eee;
 }
 
-.canteen-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+.lunchplace-card:hover, .canteen-card:hover {
+    transform: none;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
 }
 
-.canteen-header {
+.lunchplace-header, .canteen-header {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
     margin-bottom: 1rem;
 }
 
-.canteen-name {
+.lunchplace-company, .canteen-name {
     font-size: 1.3rem;
     font-weight: 600;
     color: #333;
     margin: 0;
 }
 
-.canteen-rating {
+.lunchplace-rating, .canteen-rating {
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -171,39 +243,87 @@ button:active {
     color: #666;
 }
 
-.canteen-info {
+.lunchplace-info, .canteen-info {
     margin-bottom: 1rem;
 }
 
-.canteen-company {
+.lunchplace-company, .canteen-company {
     font-weight: 500;
-    color: #667eea;
+    color: var(--clr-green);
     margin-bottom: 0.3rem;
 }
 
-.canteen-location {
+.lunchplace-location, .canteen-location {
     color: #888;
     font-size: 0.9rem;
     margin-bottom: 0.5rem;
 }
 
-.canteen-description {
+.lunchplace-description, .canteen-description {
     color: #666;
     font-size: 0.9rem;
     line-height: 1.4;
 }
 
-.canteen-actions {
+.lunchplace-actions, .canteen-actions {
     margin-top: 1rem;
     padding-top: 1rem;
     border-top: 1px solid #eee;
 }
 
 .rate-button {
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    background: var(--clr-orange);
     padding: 0.5rem 1rem;
     font-size: 0.9rem;
-    width: 100%;
+    display: inline-block;
+    border-radius: 999px;
+    font-weight: 600;
+}
+
+/* Top 5 visibility */
+#top5-list .lunchplace-card:nth-child(n+6) { display: none; }
+
+/* Top 5 as a vertical list */
+.top5-list {
+    display: block;
+}
+
+.top5-list .lunchplace-card {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+
+.top5-list .lunchplace-card:last-child {
+    border-bottom: none;
+}
+
+.top5-list .lunchplace-card:hover {
+    background: rgba(0,0,0,0.03);
+}
+
+.top5-footer {
+    margin-top: 1.25rem;
+    text-align: center;
+}
+
+.link-button {
+    display: inline-block;
+    background: white;
+    color: var(--clr-green);
+    border: 2px solid var(--clr-green);
+    padding: 0.6rem 1rem;
+    border-radius: 999px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.link-button:hover {
+    background: var(--clr-green);
+    color: #fff;
 }
 
 /* Modal */
@@ -217,17 +337,21 @@ button:active {
     height: 100%;
     background-color: rgba(0,0,0,0.5);
     backdrop-filter: blur(5px);
+    overflow: auto; /* allow page scroll when content is tall */
+    padding: 2rem 1rem; /* breathing room around modal on small screens */
 }
 
 .modal-content {
     background-color: white;
-    margin: 10% auto;
+    margin: 0 auto; /* center horizontally; vertical spacing handled by overlay padding */
     padding: 2rem;
     border-radius: 10px;
-    width: 90%;
-    max-width: 500px;
+    width: 100%;
+    max-width: 520px;
     position: relative;
     box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    max-height: calc(100vh - 4rem); /* keep inside viewport */
+    overflow: auto; /* scroll inner content if too tall */
 }
 
 .close {
@@ -285,7 +409,7 @@ button:active {
     width: 20px;
     height: 20px;
     border: 3px solid #f3f3f3;
-    border-top: 3px solid #667eea;
+    border-top: 3px solid var(--clr-green);
     border-radius: 50%;
     animation: spin 1s linear infinite;
     margin-left: 1rem;
@@ -326,7 +450,7 @@ footer {
 
 /* Responsive design */
 @media (max-width: 768px) {
-    header h1 {
+    header.hero h1 {
         font-size: 2rem;
     }
     
@@ -338,11 +462,10 @@ footer {
         padding: 1.5rem;
     }
     
-    .filter-controls {
-        grid-template-columns: 1fr;
-    }
+    .topbar-inner { padding: 0.75rem 1rem; }
+    .hero-search input { max-width: 100%; }
     
-    .canteens-grid {
+    .lunchplaces-grid, .canteens-grid {
         grid-template-columns: 1fr;
         gap: 1rem;
     }
@@ -354,16 +477,12 @@ footer {
 }
 
 @media (max-width: 480px) {
-    header {
+    header.hero {
         padding: 1.5rem 0;
     }
     
-    header h1 {
+    header.hero h1 {
         font-size: 1.8rem;
-    }
-    
-    header p {
-        font-size: 1rem;
     }
     
     .star-rating label {

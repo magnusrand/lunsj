@@ -29,6 +29,7 @@ let currentLunchPlaceId = null;
 const ratingModal = document.getElementById("rating-modal");
 const modalLunchPlaceInfo = document.getElementById("modal-lunchplace-info");
 const closeModal = document.querySelector(".close");
+const addLunchModal = document.getElementById("add-lunch-modal");
 
 // Initialize app
 document.addEventListener("DOMContentLoaded", function () {
@@ -37,13 +38,28 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function setupEventListeners() {
-  closeModal.addEventListener("click", closeRatingModal);
+  if (closeModal) closeModal.addEventListener("click", closeRatingModal);
 
   window.addEventListener("click", function (event) {
     if (event.target === ratingModal) {
       closeRatingModal();
     }
+    if (event.target === addLunchModal) {
+      closeAddLunchModal();
+    }
   });
+
+  const addBtn = document.getElementById("add-lunchplace-btn");
+  if (addBtn && addLunchModal) {
+    addBtn.addEventListener("click", function () {
+      openAddLunchModal();
+    });
+  }
+
+  const addClose = document.querySelector('[data-close-add]');
+  if (addClose) {
+    addClose.addEventListener('click', closeAddLunchModal);
+  }
 }
 
 
@@ -84,6 +100,19 @@ function closeRatingModal() {
   currentLunchPlaceId = null;
 }
 
+// Add lunch modal controls
+function openAddLunchModal() {
+  if (addLunchModal) {
+    addLunchModal.style.display = 'block';
+  }
+}
+
+function closeAddLunchModal() {
+  if (addLunchModal) {
+    addLunchModal.style.display = 'none';
+  }
+}
+
 // Helper function to get lunch place by ID (simplified)
 function getLunchPlaceById(id) {
   // This is a simplified version - in a real app you might fetch from server
@@ -110,3 +139,4 @@ function showError(message) {
 
 // Make openRatingModal globally accessible
 window.openRatingModal = openRatingModal;
+window.closeAddLunchModal = closeAddLunchModal;

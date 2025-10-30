@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Lunsj - Lunsjsteder i Norge</title>
+    <title>Alle lunsjsteder - Lunsj</title>
     <link rel="stylesheet" href="styles.css" />
     <script
       src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.7/dist/htmx.min.js"
@@ -14,54 +14,73 @@
   <body>
     <nav class="topbar">
       <div class="topbar-inner">
-        <div class="logo">🍽️ Lunsj</div>
-        <button id="add-lunchplace-btn" class="topbar-btn">Legg til lunsjsted</button>
+        <a class="logo" href="index.html">🍽️ Lunsj</a>
+        <div>
+          <button id="add-lunchplace-btn" class="btn btn-primary btn-small">Legg til lunsjsted</button>
+          <a class="link-button" href="index.html">Til forsiden</a>
+        </div>
       </div>
     </nav>
+
     <header class="hero">
       <div class="hero-inner">
-        <h1>Hvordan er lunsjen hos …</h1>
-        <p class="hero-sub">Søk etter bedrift, sted eller serveringstype. Vurder og del erfaringer.</p>
+        <h1>Alle lunsjsteder</h1>
         <div class="hero-search">
-          <div class="input-pill">
-            <span class="input-icon" aria-hidden="true">🔎</span>
-            <input
-              type="text"
-              id="search-input"
-              class="input-field"
-              name="search"
-              placeholder="Søk etter bedrift eller sted..."
-              hx-get="/api/lunchplaces"
-              hx-target="#lunchplaces-list"
-              hx-trigger="input changed delay:300ms"
-            />
-          </div>
+          <input
+            type="text"
+            id="search-input"
+            name="search"
+            placeholder="Søk etter bedrift eller sted..."
+            hx-get="/api/lunchplaces"
+            hx-target="#lunchplaces-list"
+            hx-trigger="input changed delay:300ms"
+            hx-include="#sort-select"
+          />
         </div>
       </div>
     </header>
 
     <main id="main-content">
-      
-
-      <!-- Top 5 Section -->
-      <section id="top5-section">
-        <h2>Topp 5 lunsjsteder</h2>
-        <div
-          id="top5-list"
-          class="top5-list"
-          hx-get="/api/lunchplaces?sort=rating"
-          hx-trigger="load"
-        >
-        </div>
-        <div class="top5-footer">
-          <a class="link-button" href="alle.html">Se alle lunsjsteder →</a>
+      <section id="filter-section">
+        <h2>Søk og filtrer</h2>
+        <div class="filter-controls">
+          <input
+            type="text"
+            placeholder="Søk etter bedrift eller sted..."
+            name="search"
+            hx-get="/api/lunchplaces"
+            hx-target="#lunchplaces-list"
+            hx-trigger="input changed delay:300ms"
+            hx-include="#sort-select"
+          />
+          <select
+            id="sort-select"
+            name="sort"
+            hx-get="/api/lunchplaces"
+            hx-target="#lunchplaces-list"
+            hx-trigger="change"
+          >
+            <option value="company">Sorter etter bedrift</option>
+            <option value="rating">Sorter etter vurdering</option>
+            <option value="location">Sorter etter sted</option>
+            <option value="servingType">Sorter etter serveringstype</option>
+          </select>
         </div>
       </section>
 
-      
+      <section id="lunchplaces-section">
+        <h2>Lunsjsteder</h2>
+        <div
+          id="lunchplaces-list"
+          class="lunchplaces-grid"
+          hx-get="/api/lunchplaces"
+          hx-trigger="load"
+        >
+        </div>
+      </section>
     </main>
 
-    <!-- Add Lunchplace Modal -->
+    <!-- Add Lunchplace Modal (same as index) -->
     <div id="add-lunch-modal" class="modal" aria-hidden="true">
       <div class="modal-content">
         <span class="close" data-close-add>&times;</span>
@@ -110,51 +129,11 @@
       </div>
     </div>
 
-    <!-- Rating Modal -->
-    <div id="rating-modal" class="modal">
-      <div class="modal-content">
-        <span class="close">&times;</span>
-        <h3>Vurder lunsjsted</h3>
-        <div id="modal-lunchplace-info"></div>
-        <form
-          id="rating-form"
-          hx-post="/api/rating"
-          hx-target="#modal-lunchplace-info"
-          hx-swap="afterend"
-          hx-on::after-request="closeRatingModal()"
-        >
-          <div class="rating-input">
-            <label>Vurdering (1-5 stjerner):</label>
-            <div class="star-rating">
-              <input type="radio" id="star5" name="rating" value="5" />
-              <label for="star5">★</label>
-              <input type="radio" id="star4" name="rating" value="4" />
-              <label for="star4">★</label>
-              <input type="radio" id="star3" name="rating" value="3" />
-              <label for="star3">★</label>
-              <input type="radio" id="star2" name="rating" value="2" />
-              <label for="star2">★</label>
-              <input type="radio" id="star1" name="rating" value="1" />
-              <label for="star1">★</label>
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="rating-comment">Kommentar (valgfri):</label>
-            <textarea
-              id="rating-comment"
-              name="comment"
-              rows="3"
-              placeholder="Del din opplevelse..."
-            ></textarea>
-          </div>
-          <button type="submit">Send vurdering</button>
-        </form>
-      </div>
-    </div>
-
     <footer>
       <p>&copy; 2024 Lunsj - Lunsjsteder i Norge</p>
     </footer>
     <script type="module" src="app.js"></script>
   </body>
-</html>
+  </html>
+
+
