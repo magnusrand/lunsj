@@ -1,0 +1,14 @@
+<div class="review-card">
+  <div class="review-card-header">
+    <%- include('star-rating', { rating: review.rating }) %>
+    <% if (review.companyName) { %>
+      <span class="review-company"><%= review.companyName %></span>
+    <% } %>
+  </div>
+  <% if (review.comment) { %>
+    <p class="review-comment"><%= review.comment %></p>
+  <% } %>
+  <time class="review-time" datetime="<%= review.createdAt ? new Date(review.createdAt._seconds ? review.createdAt._seconds * 1000 : review.createdAt).toISOString() : '' %>">
+    <%= review.createdAt ? new Date(review.createdAt._seconds ? review.createdAt._seconds * 1000 : review.createdAt).toLocaleDateString('nb-NO', { day: 'numeric', month: 'long', year: 'numeric' }) : '' %>
+  </time>
+</div>

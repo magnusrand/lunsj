@@ -1,0 +1,19 @@
+<h2>Anmeldelser</h2>
+
+<div id="review-form-container">
+  <% if (typeof review !== 'undefined' && review) { %>
+    <%- include('review-form', { addressKey: canteen.addressKey, companies: canteen.companies || [], review }) %>
+  <% } else { %>
+    <p class="notice-text">Takk for din anmeldelse!</p>
+  <% } %>
+</div>
+
+<div id="reviews-list">
+  <% if (reviews.length === 0) { %>
+    <p class="empty-text">Ingen anmeldelser ennå.</p>
+  <% } else { %>
+    <% reviews.forEach(review => { %>
+      <%- include('review-card', { review }) %>
+    <% }) %>
+  <% } %>
+</div>

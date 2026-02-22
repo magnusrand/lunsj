@@ -1,0 +1,71 @@
+<% var title = (canteen.canteenName ? canteen.canteenName + ' — ' : '') + canteen.street + ', ' + canteen.city; var description = 'Anmeldelser av kantinen på ' + canteen.street + ', ' + canteen.postalCode + ' ' + canteen.city; %>
+<%- include('partials/header', { title, description }) %>
+
+<article class="canteen-page">
+  <header class="canteen-header">
+    <h1><%= canteen.canteenName || canteen.street %></h1>
+    <% if (canteen.canteenName) { %>
+      <p class="canteen-address"><%= canteen.street %>, <%= canteen.postalCode %> <%= canteen.city %></p>
+    <% } else { %>
+      <p class="canteen-address"><%= canteen.postalCode %> <%= canteen.city %></p>
+    <% } %>
+  </header>
+
+  <div class="canteen-summary">
+    <div class="rating-large">
+      <span class="rating-number"><%= canteen.averageRating ? canteen.averageRating.toFixed(1) : '—' %></span>
+      <%- include('partials/star-rating', { rating: canteen.averageRating || 0 }) %>
+      <span class="rating-count"><%= canteen.totalReviews %> anmeldelse<%= canteen.totalReviews !== 1 ? 'r' : '' %></span>
+    </div>
+
+    <% if (canteen.ratingDistribution) { %>
+    <div class="rating-bars">
+      <% for (let i = 5; i >= 1; i--) {
+        const count = (canteen.ratingDistribution && canteen.ratingDistribution[i]) || 0;
+        const pct = canteen.totalReviews > 0 ? (count / canteen.totalReviews) * 100 : 0;
+      %>
+      <div class="rating-bar-row">
+        <span class="rating-bar-label"><%= i %></span>
+        <div class="rating-bar-track">
+          <div class="rating-bar-fill" style="width: <%= pct %>%"></div>
+        </div>
+        <span class="rating-bar-count"><%= count %></span>
+      </div>
+      <% } %>
+    </div>
+    <% } %>
+  </div>
+
+  <%- include('partials/canteen-info', { canteen }) %>
+
+  <% if (canteen.companies && canteen.companies.length > 0) { %>
+  <section class="canteen-companies">
+    <h2>Bedrifter på denne adressen</h2>
+    <ul class="company-list">
+      <% canteen.companies.forEach(c => { %>
+        <li><%= c.name %></li>
+      <% }) %>
+    </ul>
+  </section>
+  <% } %>
+
+  <section class="canteen-reviews" id="reviews-section">
+    <h2>Anmeldelser</h2>
+
+    <div id="review-form-container">
+      <%- include('partials/review-form', { addressKey: canteen.addressKey, companies: canteen.companies || [] }) %>
+    </div>
+
+    <div id="reviews-list">
+      <% if (reviews.length === 0) { %>
+        <p class="empty-text">Ingen anmeldelser ennå. Bli den første!</p>
+      <% } else { %>
+        <% reviews.forEach(review => { %>
+          <%- include('partials/review-card', { review }) %>
+        <% }) %>
+      <% } %>
+    </div>
+  </section>
+</article>
+
+<%- include('partials/footer') %>

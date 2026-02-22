@@ -1,0 +1,14 @@
+<div class="search-bar">
+  <input
+    type="text"
+    name="query"
+    placeholder="Søk etter bedrift &hellip;"
+    autocomplete="off"
+    hx-post="/api/sok-bedrift"
+    hx-trigger="input changed delay:400ms, keyup[key=='Enter']"
+    hx-target="#search-results"
+    hx-indicator="#search-spinner"
+  />
+  <span id="search-spinner" class="htmx-indicator spinner"></span>
+  <div id="search-results"></div>
+</div>

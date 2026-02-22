@@ -1,0 +1,9 @@
+<% if (companies.length === 0) { %>
+  <p class="empty-text">Ingen treff. Prøv et annet søkeord.</p>
+<% } else { %>
+  <ul class="search-results">
+    <% companies.forEach(company => { %>
+      <%- include('partials/company-result', { company }) %>
+    <% }) %>
+  </ul>
+<% } %>

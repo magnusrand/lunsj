@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="no">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= typeof title !== 'undefined' ? title + ' — Lunsjguiden' : 'Lunsjguiden — finn og anmeld kantinen din' %></title>
+    <meta
+      name="description"
+      content="<%= typeof description !== 'undefined' ? description : 'Søk opp arbeidsplassen din og finn eller legg igjen anmeldelser om kantinen.' %>"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+    <script
+      src="https://unpkg.com/htmx.org@2.0.4"
+      integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <nav class="nav">
+      <div class="container">
+        <a href="/" class="nav-logo">Lunsjguiden</a>
+      </div>
+    </nav>
+
+    <main class="container">

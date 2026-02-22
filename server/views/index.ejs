@@ -1,0 +1,37 @@
+<%- include('partials/header') %>
+
+<section class="hero">
+  <h1>Hvordan er lunsjen på jobben din?</h1>
+  <p class="hero-subtitle">Søk opp arbeidsplassen for å finne eller anmelde kantinen.</p>
+  <%- include('partials/search-bar') %>
+</section>
+
+<section class="section">
+  <h2 class="hero-pitch-title">For deg som bryr deg om lunsj</h2>
+  <p class="hero-pitch">Med tjenester som Google Maps og Vink har det aldri vært enklere å finne de beste restaurantene og kafeene &mdash; på jobben derimot er det ikke like lett. Vel, ikke mer; <strong>Lunsjguiden</strong> er her!</p>
+</section>
+
+<% if (topCanteens.length > 0) { %>
+<section class="section">
+  <h2 class="section-title">Populære kantiner</h2>
+  <div class="canteen-grid">
+    <% topCanteens.forEach(canteen => { %>
+      <%- include('partials/canteen-card', { canteen }) %>
+    <% }) %>
+  </div>
+</section>
+<% } %>
+
+<section class="section">
+  <h2 class="section-title">Siste anmeldelser</h2>
+  <div
+    id="recent-reviews"
+    hx-get="/api/siste-anmeldelser"
+    hx-trigger="load"
+    hx-swap="innerHTML"
+  >
+    <p class="loading-text">Laster anmeldelser&hellip;</p>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

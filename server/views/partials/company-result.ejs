@@ -1,0 +1,14 @@
+<li class="company-result">
+  <button
+    hx-post="/api/velg-bedrift"
+    hx-vals='{"orgnr": "<%= company.organisasjonsnummer %>"}'
+    hx-target="#search-results"
+    hx-indicator="#search-spinner"
+    class="company-result-btn"
+  >
+    <span class="company-name"><%= company.navn %></span>
+    <% if (company.address) { %>
+      <span class="company-address"><%= company.address %></span>
+    <% } %>
+  </button>
+</li>

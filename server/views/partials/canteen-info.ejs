@@ -1,0 +1,63 @@
+<% if (canteen.info) {
+  const info = canteen.info;
+  const totalReviews = canteen.totalReviews || 0;
+  const hasAnyInfo = (info.paymentType && info.paymentType.consensus) ||
+                     (info.priceSubscription && info.priceSubscription.median != null) ||
+                     (info.pricePerVisit && info.pricePerVisit.median != null) ||
+                     (info.servingType && info.servingType.consensus) ||
+                     (info.employeeDiscount && info.employeeDiscount.consensus);
+  if (hasAnyInfo) {
+    const paymentLabels = { subscription: 'Abonnement', per_visit: 'Betale per gang' };
+    const servingLabels = { buffet: 'Buffet', specific_dish: 'Spesifikk rett', by_weight: 'Per vekt' };
+%>
+<section class="canteen-info">
+  <h2>Om kantinen</h2>
+  <ul class="info-list">
+    <% if (info.paymentType && info.paymentType.consensus) {
+      const totalVotes = Object.values(info.paymentType.votes).reduce((a, b) => a + b, 0);
+    %>
+    <li class="info-item">
+      <span class="info-label">Betalingstype</span>
+      <span class="info-value"><%= paymentLabels[info.paymentType.consensus] || info.paymentType.consensus %></span>
+      <span class="info-reporters">Rapportert av <%= totalVotes %> av <%= totalReviews %></span>
+    </li>
+    <% } %>
+
+    <% if (info.priceSubscription && info.priceSubscription.median != null) { %>
+    <li class="info-item">
+      <span class="info-label">Ca. pris (abo.)</span>
+      <span class="info-value"><%= info.priceSubscription.median %> kr/mnd</span>
+      <span class="info-reporters">Basert på <%= info.priceSubscription.values.length %> svar</span>
+    </li>
+    <% } %>
+
+    <% if (info.pricePerVisit && info.pricePerVisit.median != null) { %>
+    <li class="info-item">
+      <span class="info-label">Ca. pris (per gang)</span>
+      <span class="info-value"><%= info.pricePerVisit.median %> kr/lunsj</span>
+      <span class="info-reporters">Basert på <%= info.pricePerVisit.values.length %> svar</span>
+    </li>
+    <% } %>
+
+    <% if (info.servingType && info.servingType.consensus) {
+      const totalVotes = Object.values(info.servingType.votes).reduce((a, b) => a + b, 0);
+    %>
+    <li class="info-item">
+      <span class="info-label">Serveringstype</span>
+      <span class="info-value"><%= servingLabels[info.servingType.consensus] || info.servingType.consensus %></span>
+      <span class="info-reporters">Rapportert av <%= totalVotes %> av <%= totalReviews %></span>
+    </li>
+    <% } %>
+
+    <% if (info.employeeDiscount && info.employeeDiscount.consensus) {
+      const totalVotes = Object.values(info.employeeDiscount.votes).reduce((a, b) => a + b, 0);
+    %>
+    <li class="info-item">
+      <span class="info-label">Ansattrabatt</span>
+      <span class="info-value"><%= info.employeeDiscount.consensus === 'true' ? 'Ja' : 'Nei' %></span>
+      <span class="info-reporters">Rapportert av <%= totalVotes %> av <%= totalReviews %></span>
+    </li>
+    <% } %>
+  </ul>
+</section>
+<% } } %>

@@ -1,0 +1,8 @@
+<fieldset class="star-input" id="star-input">
+  <legend class="sr-only">Rating</legend>
+  <% var selectedRating = (typeof review !== 'undefined' && review) ? review.rating : 0; %>
+  <% for (let i = 5; i >= 1; i--) { %>
+    <input type="radio" name="rating" value="<%= i %>" id="star-<%= i %>" required<%= i === selectedRating ? ' checked' : '' %>>
+    <label for="star-<%= i %>" title="<%= i %> stjerne<%= i !== 1 ? 'r' : '' %>">&#9733;</label>
+  <% } %>
+</fieldset>
