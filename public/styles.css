@@ -54,15 +54,6 @@ main.container {
   padding-bottom: 4rem;
 }
 
-/* === Logo Font === */
-@font-face {
-  font-family: 'Super Maples';
-  src: url('/fonts/SuperMaples.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-
 /* === Nav === */
 .nav {
   background: var(--bg-card);
@@ -71,11 +62,12 @@ main.container {
 }
 
 .nav-logo {
-  font-family: 'Super Maples', cursive;
-  font-size: 2rem;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-weight: 700;
+  font-size: 1.5rem;
   color: var(--primary);
   text-decoration: none;
-  letter-spacing: 0.01em;
+  letter-spacing: -0.01em;
 }
 
 /* === Footer === */
