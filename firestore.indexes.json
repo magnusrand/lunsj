@@ -1,19 +1,4 @@
 {
-  "indexes": [
-    {
-      "collectionGroup": "canteens",
-      "queryScope": "COLLECTION",
-      "fields": [
-        { "fieldPath": "totalReviews", "order": "DESCENDING" }
-      ]
-    },
-    {
-      "collectionGroup": "reviews",
-      "queryScope": "COLLECTION_GROUP",
-      "fields": [
-        { "fieldPath": "createdAt", "order": "DESCENDING" }
-      ]
-    }
-  ],
+  "indexes": [],
   "fieldOverrides": []
 }
