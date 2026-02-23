@@ -278,4 +278,4 @@ expressApp.use((req, res) => {
   res.status(404).render("404");
 });
 
-exports.app = onRequest({ region: "europe-west1" }, expressApp);
+exports.app = onRequest({ region: "europe-west1", maxInstances: 10 }, expressApp);
