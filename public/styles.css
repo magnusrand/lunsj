@@ -229,6 +229,11 @@ h3 {
   border-color: var(--primary-light);
 }
 
+.search-bar input:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: -2px;
+}
+
 .search-bar input::placeholder {
   color: var(--text-light);
 }
@@ -690,6 +695,11 @@ h3 {
   background: var(--bg);
 }
 
+.recent-review-link:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: -2px;
+}
+
 .recent-review-address {
   display: block;
   margin-top: 0.5rem;
@@ -966,6 +976,47 @@ h3 {
 
 .canteen-chooser-new .form-input {
   margin-bottom: 0.75rem;
+}
+
+/* === Skip Link === */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+  padding: 0.75rem 1.25rem;
+  background: var(--primary);
+  color: white;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 0 0 var(--radius) 0;
+}
+
+.skip-link:focus {
+  left: 0;
+}
+
+/* === Focus-Visible === */
+a:focus-visible,
+button:focus-visible,
+[role="option"]:focus-visible,
+summary:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.form-select:focus-visible,
+.form-textarea:focus-visible,
+.form-input:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: -2px;
+}
+
+/* === Keyboard-Focused Search Result === */
+.company-result.is-focused .company-result-btn {
+  background: var(--bg);
+  outline: 2px solid var(--primary);
+  outline-offset: -2px;
 }
 
 /* === Responsive === */

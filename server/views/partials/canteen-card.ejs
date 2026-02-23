@@ -1,4 +1,4 @@
-<a href="/kantine/<%= canteen.addressKey %>" class="canteen-card">
+<a href="/kantine/<%= canteen.addressKey %>" class="canteen-card" aria-label="<%= canteen.canteenName || canteen.street %>, <%= canteen.city %> — <%= canteen.averageRating ? canteen.averageRating.toFixed(1) + ' av 5' : 'ingen vurdering' %>, <%= canteen.totalReviews %> anmeldelse<%= canteen.totalReviews !== 1 ? 'r' : '' %>">
   <div class="canteen-card-rating">
     <%- include('star-rating', { rating: canteen.averageRating || 0 }) %>
     <span class="canteen-card-score"><%= canteen.averageRating ? canteen.averageRating.toFixed(1) : '—' %></span>

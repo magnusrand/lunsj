@@ -20,7 +20,8 @@
   <%- include('star-input') %>
 
   <% if (companies.length > 1) { %>
-    <select name="companyName" class="form-select">
+    <label for="company-select" class="sr-only">Velg bedrift</label>
+    <select name="companyName" id="company-select" class="form-select">
       <option value="">Velg bedrift (valgfritt)</option>
       <% companies.forEach(c => { %>
         <option value="<%= c.name %>"<%= (isEdit && review.companyName === c.name) ? ' selected' : '' %>><%= c.name %></option>
@@ -36,6 +37,7 @@
     rows="3"
     maxlength="500"
     class="form-textarea"
+    aria-label="Kommentar"
   ><%= isEdit && review.comment ? review.comment : '' %></textarea>
 
   <details class="form-details" open>

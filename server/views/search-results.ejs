@@ -1,9 +1,10 @@
 <% if (companies.length === 0) { %>
-  <p class="empty-text">Ingen treff. Prøv et annet søkeord.</p>
+  <p class="empty-text">Ingen treff. Pr&#248;v et annet s&#248;keord.</p>
 <% } else { %>
-  <ul class="search-results">
-    <% companies.forEach(company => { %>
-      <%- include('partials/company-result', { company }) %>
+  <p class="sr-only"><%= companies.length %> resultat<%= companies.length !== 1 ? 'er' : '' %> funnet</p>
+  <ul class="search-results" role="listbox">
+    <% companies.forEach((company, index) => { %>
+      <%- include('partials/company-result', { company, index }) %>
     <% }) %>
   </ul>
 <% } %>
