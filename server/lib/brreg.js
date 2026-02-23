@@ -1,4 +1,5 @@
 const BRREG_BASE = "https://data.brreg.no/enhetsregisteret/api";
+const FETCH_TIMEOUT_MS = 5000;
 
 // Simple in-memory cache (5 min TTL)
 const cache = new Map();
@@ -32,7 +33,17 @@ async function searchCompanies(query) {
   if (cached) return cached;
 
   const url = `${BRREG_BASE}/enheter?navn=${encodeURIComponent(query)}&fraAntallAnsatte=5&size=8`;
-  const res = await fetch(url);
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+  let res;
+  try {
+    res = await fetch(url, { signal: controller.signal });
+  } catch (err) {
+    if (err.name === "AbortError") return [];
+    throw err;
+  } finally {
+    clearTimeout(timeout);
+  }
 
   if (!res.ok) {
     throw new Error(`Brreg API returned ${res.status}`);
@@ -72,7 +83,17 @@ async function getCompany(orgnr) {
   if (cached) return cached;
 
   const url = `${BRREG_BASE}/enheter/${encodeURIComponent(orgnr)}`;
-  const res = await fetch(url);
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+  let res;
+  try {
+    res = await fetch(url, { signal: controller.signal });
+  } catch (err) {
+    if (err.name === "AbortError") return null;
+    throw err;
+  } finally {
+    clearTimeout(timeout);
+  }
 
   if (!res.ok) {
     if (res.status === 404) return null;

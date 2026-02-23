@@ -1,5 +1,7 @@
 const path = require("path");
 const express = require("express");
+const helmet = require("helmet");
+const rateLimit = require("express-rate-limit");
 const { onRequest } = require("firebase-functions/v2/https");
 const admin = require("firebase-admin");
 
@@ -22,6 +24,16 @@ const {
 } = require("./lib/firestore");
 
 const expressApp = express();
+
+expressApp.use(helmet());
+
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 50,
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+expressApp.use("/api/", apiLimiter);
 
 expressApp.set("view engine", "ejs");
 expressApp.set("views", path.join(__dirname, "views"));
