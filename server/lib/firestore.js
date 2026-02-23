@@ -428,6 +428,16 @@ async function getRecentReviews(limit = 8) {
   return reviews;
 }
 
+/**
+ * Add general feedback to the feedback collection.
+ */
+async function addFeedback(message) {
+  await db().collection("feedback").add({
+    message,
+    createdAt: FieldValue.serverTimestamp(),
+  });
+}
+
 module.exports = {
   getCanteen,
   createOrUpdateCanteen,
@@ -439,4 +449,5 @@ module.exports = {
   getRecentReviews,
   getCanteensAtAddress,
   getNextCanteenKey,
+  addFeedback,
 };

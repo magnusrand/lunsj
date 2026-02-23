@@ -18,6 +18,7 @@ const {
   getRecentReviews,
   getCanteensAtAddress,
   getNextCanteenKey,
+  addFeedback,
 } = require("./lib/firestore");
 
 const expressApp = express();
@@ -254,6 +255,21 @@ expressApp.get("/api/siste-anmeldelser", async (req, res) => {
   } catch (err) {
     console.error("Recent reviews error:", err);
     res.send("");
+  }
+});
+
+// Submit feedback
+expressApp.post("/api/tilbakemelding", async (req, res) => {
+  const message = (req.body.message || "").trim();
+  if (!message || message.length > 1000) {
+    return res.send('<p class="error-text">Tilbakemeldingen er tom eller for lang.</p>');
+  }
+  try {
+    await addFeedback(message);
+    res.send('<p class="notice-text">Takk for tilbakemeldingen!</p>');
+  } catch (err) {
+    console.error("Feedback error:", err);
+    res.send('<p class="error-text">Kunne ikke sende tilbakemeldingen. Prøv igjen.</p>');
   }
 });
 

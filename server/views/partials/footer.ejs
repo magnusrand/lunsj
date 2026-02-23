@@ -2,7 +2,23 @@
 
   <footer class="footer">
     <div class="container">
-      <p>Lunsjguiden &ndash; finn og anmeld kantinen på jobben</p>
+      <p>Lunsjguiden &ndash; finn og anmeld jobbkantiner</p>
+      <p class="footer-disclaimer">Lunsjguiden er en ikke-kommersiell tjeneste. Anmeldelser er skrevet av brukere og er ikke verifisert. Vurderinger og meninger er subjektive og representerer kun den enkelte brukerens opplevelse. Lunsjguiden er ikke ansvarlig for innholdet i anmeldelser, og tar forbehold om feil i informasjon om kantiner og virksomheter.</p>
+      <p class="footer-feedback">
+        <button class="feedback-toggle" onclick="document.getElementById('feedback-popover').toggleAttribute('open')">Gi tilbakemelding</button>
+      </p>
+      <div id="feedback-popover" class="feedback-popover">
+        <form hx-post="/api/tilbakemelding" hx-target="#feedback-response" hx-swap="innerHTML" hx-on::after-request="if(event.detail.successful) this.reset()">
+          <label for="feedback-text" class="form-label">Hva synes du om Lunsjguiden?</label>
+          <textarea id="feedback-text" name="message" class="form-textarea" rows="3" maxlength="1000" placeholder="Skriv din tilbakemelding her..." required></textarea>
+          <div class="feedback-actions">
+            <button type="submit" class="btn btn-primary">Send</button>
+            <button type="button" class="btn" onclick="document.getElementById('feedback-popover').removeAttribute('open')">Avbryt</button>
+          </div>
+          <div id="feedback-response"></div>
+        </form>
+      </div>
+      <p class="footer-credit">Laget av Magnus og Claude</p>
     </div>
   </footer>
 
