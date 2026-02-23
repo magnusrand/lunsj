@@ -96,6 +96,16 @@ main.container {
   line-height: 1.4;
 }
 
+.footer-disclaimer a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.footer-disclaimer a:hover {
+  opacity: 1;
+}
+
 .footer-feedback {
   margin-top: 0.75rem;
 }
