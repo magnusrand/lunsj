@@ -10,7 +10,7 @@
     aria-activedescendant=""
     id="search-input"
     hx-post="/api/sok-bedrift"
-    hx-trigger="input changed delay:400ms, keyup[key=='Enter' && !this.getAttribute('aria-activedescendant')]"
+    hx-trigger="keyup[event.key.length===1 || event.key==='Backspace' || event.key==='Delete'] changed delay:400ms, keyup[event.key==='Enter' && !this.getAttribute('aria-activedescendant')]"
     hx-target="#search-results"
     hx-indicator="#search-spinner"
   />

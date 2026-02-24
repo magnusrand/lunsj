@@ -102,12 +102,14 @@
     }
   });
 
-  // Update aria-expanded and reset active index when results load
+  // Update aria-expanded, reset active index, and clear spinner when results load
   document.body.addEventListener("htmx:afterSettle", function (evt) {
     if (evt.detail.target === resultsContainer || resultsContainer.contains(evt.detail.target)) {
       activeIndex = -1;
       var hasResults = getOptions().length > 0;
       if (combobox) combobox.setAttribute("aria-expanded", hasResults ? "true" : "false");
+      var spinner = document.getElementById("search-spinner");
+      if (spinner) spinner.classList.remove("htmx-request");
     }
   });
 

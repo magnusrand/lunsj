@@ -1,5 +1,5 @@
 <div class="canteen-chooser">
-  <h3>Det finnes allerede kantine<%= canteens.length > 1 ? 'r' : '' %> på denne adressen</h3>
+  <% if (canteens.length > 0) { %>
   <p class="canteen-chooser-subtitle">Velg en eksisterende kantine eller opprett en ny for <strong><%= companyName %></strong>.</p>
 
   <div class="canteen-chooser-options">
@@ -18,16 +18,16 @@
       <span class="canteen-chooser-card-meta">
         <%= c.averageRating ? c.averageRating.toFixed(1) + ' ★' : 'Ingen rating' %>
         &middot; <%= c.totalReviews || 0 %> anmeldelse<%= (c.totalReviews || 0) !== 1 ? 'r' : '' %>
-        <% if (c.companies && c.companies.length > 0) { %>
-          &middot; <%= c.companies.map(co => co.name).join(', ') %>
-        <% } %>
       </span>
     </button>
     <% }) %>
   </div>
+  <% } %>
 
   <div class="canteen-chooser-new">
+    <% if (canteens.length > 0) { %>
     <h4>Opprett ny kantine</h4>
+    <% } %>
     <form
       hx-post="/api/velg-bedrift"
       hx-target="#search-results"
@@ -38,11 +38,12 @@
       <input
         type="text"
         name="canteenName"
-        placeholder="Navn på kantinen (valgfritt, f.eks. «Kantinen i 2. etasje»)"
+        placeholder="Kantinens plassering / navn (f.eks. «2. etasje» eller «Bygg B»)"
         class="form-input"
         maxlength="100"
+        <%= canteens.length > 0 ? 'required' : '' %>
       >
-      <button type="submit" class="btn btn-primary">Opprett ny kantine</button>
+      <button type="submit" class="btn btn-primary"><%= canteens.length > 0 ? 'Opprett ny kantine' : 'Gå videre' %></button>
     </form>
   </div>
 </div>

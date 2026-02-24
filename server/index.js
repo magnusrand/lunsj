@@ -130,14 +130,19 @@ expressApp.post("/api/velg-bedrift", async (req, res) => {
 
     // First call: check if canteens exist at this address
     const existingCanteens = await getCanteensAtAddress(baseAddressKey);
-    if (existingCanteens.length === 0) {
-      // No existing canteens — create directly
-      await createOrUpdateCanteen(baseAddressKey, company, { baseAddressKey });
-      res.set("HX-Redirect", `/kantine/${baseAddressKey}`);
+
+    // Check if this org already belongs to a kantine at this address
+    const existingForOrg = existingCanteens.find(
+      (c) => c.companies && c.companies.some((co) => co.orgnr === orgnr)
+    );
+    if (existingForOrg) {
+      // Returning org — update timestamp and redirect directly
+      await createOrUpdateCanteen(existingForOrg.addressKey, company, { baseAddressKey });
+      res.set("HX-Redirect", `/kantine/${existingForOrg.addressKey}`);
       return res.send("");
     }
 
-    // Existing canteens found — show chooser
+    // First time for this org — show chooser (with or without existing canteens)
     res.render("partials/canteen-chooser", {
       canteens: existingCanteens,
       orgnr: company.organisasjonsnummer,

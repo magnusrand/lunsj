@@ -1,11 +1,11 @@
-<% var title = (canteen.canteenName ? canteen.canteenName + ' — ' : '') + canteen.street + ', ' + canteen.city; var description = 'Anmeldelser av kantinen på ' + canteen.street + ', ' + canteen.postalCode + ' ' + canteen.city; %>
+<% var title = canteen.street + ', ' + canteen.city + (canteen.canteenName ? ' — ' + canteen.canteenName : ''); var description = 'Anmeldelser av kantinen på ' + canteen.street + ', ' + canteen.postalCode + ' ' + canteen.city; %>
 <%- include('partials/header', { title, description }) %>
 
 <article class="canteen-page">
   <header class="canteen-header">
-    <h1><%= canteen.canteenName || canteen.street %></h1>
+    <h1><%= canteen.street %></h1>
     <% if (canteen.canteenName) { %>
-      <p class="canteen-address"><%= canteen.street %>, <%= canteen.postalCode %> <%= canteen.city %></p>
+      <p class="canteen-address"><%= canteen.canteenName %> &middot; <%= canteen.postalCode %> <%= canteen.city %></p>
     <% } else { %>
       <p class="canteen-address"><%= canteen.postalCode %> <%= canteen.city %></p>
     <% } %>
@@ -40,7 +40,7 @@
 
   <% if (canteen.companies && canteen.companies.length > 0) { %>
   <section class="canteen-companies">
-    <h2>Bedrifter på denne adressen</h2>
+    <h2>Bedrifter med denne kantinen</h2>
     <ul class="company-list">
       <% canteen.companies.forEach(c => { %>
         <li><%= c.name %></li>

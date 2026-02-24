@@ -53,7 +53,7 @@ async function searchCompanies(query) {
   const enheter = (data._embedded && data._embedded.enheter) || [];
 
   const results = enheter
-    .filter((e) => e.forretningsadresse || e.beliggenhetsadresse)
+    .filter((e) => (e.forretningsadresse || e.beliggenhetsadresse) && !/ holding/i.test(e.navn))
     .map((e) => {
       const addr = e.forretningsadresse || e.beliggenhetsadresse;
       const streetParts = addr.adresse || [];
