@@ -25,7 +25,17 @@ const {
 
 const expressApp = express();
 
-expressApp.use(helmet());
+expressApp.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+        "script-src": ["'self'", "https://unpkg.com", "https://cloud.umami.is"],
+        "connect-src": ["'self'", "https://cloud.umami.is"],
+      },
+    },
+  })
+);
 
 const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
