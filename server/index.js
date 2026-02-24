@@ -158,6 +158,7 @@ expressApp.post("/api/velg-bedrift", async (req, res) => {
       canteens: existingCanteens,
       orgnr: company.organisasjonsnummer,
       companyName: company.name,
+      street: company.address.street,
     });
   } catch (err) {
     console.error("Select company error:", err);

@@ -971,9 +971,14 @@ h3 {
 }
 
 .canteen-chooser-new h4 {
+  text-align: left;
   font-size: 0.95rem;
   font-weight: 600;
   margin-bottom: 0.75rem;
+}
+
+.canteen-chooser-new .form-label {
+  text-align: left;
 }
 
 .canteen-chooser-new .form-input {
