@@ -1,0 +1,114 @@
+<% var isEdit = (typeof review !== 'undefined' && review); %>
+<% if (isEdit) { %>
+  <p class="review-edit-notice">Du har allerede anmeldt denne kantinen. Du kan endre anmeldelsen din under.</p>
+<% } %>
+<form
+  class="review-form"
+  hx-post="<%= isEdit ? '/api/endre-anmeldelse' : '/api/anmeldelse' %>"
+  hx-target="#reviews-section"
+  hx-swap="innerHTML"
+  id="review-form"
+>
+  <input type="hidden" name="addressKey" value="<%= addressKey %>">
+  <input type="hidden" name="clientId" id="clientId" value="">
+  <% if (isEdit) { %>
+    <input type="hidden" name="reviewId" value="<%= review.id %>">
+  <% } %>
+
+  <h3><%= isEdit ? 'Endre din anmeldelse' : 'Gi din anmeldelse' %></h3>
+
+  <%- include('star-input') %>
+
+  <% if (companies.length > 1) { %>
+    <label for="company-select" class="sr-only">Velg bedrift</label>
+    <select name="companyName" id="company-select" class="form-select">
+      <option value="">Velg bedrift (valgfritt)</option>
+      <% companies.forEach(c => { %>
+        <option value="<%= c.name %>"<%= (isEdit && review.companyName === c.name) ? ' selected' : '' %>><%= c.name %></option>
+      <% }) %>
+    </select>
+  <% } else if (companies.length === 1) { %>
+    <input type="hidden" name="companyName" value="<%= companies[0].name %>">
+  <% } %>
+
+  <textarea
+    name="comment"
+    placeholder="Skriv en kommentar (valgfritt)&hellip;"
+    rows="3"
+    maxlength="500"
+    class="form-textarea"
+    aria-label="Kommentar"
+  ><%= isEdit && review.comment ? review.comment : '' %></textarea>
+
+  <details class="form-details" open>
+    <summary class="form-details-summary">Om kantinen (valgfritt)</summary>
+    <div class="form-details-content">
+
+      <fieldset class="form-fieldset">
+        <legend class="form-label">Betalingstype</legend>
+        <div class="form-radio-group">
+          <label class="form-radio-label">
+            <input type="radio" name="paymentType" value="subscription"<%= (isEdit && review.paymentType === 'subscription') ? ' checked' : '' %> onchange="document.getElementById('price-group').style.display='block'; document.getElementById('price-label-text').textContent='Ca. pris (kr/mnd)'; document.getElementById('price-input').placeholder='f.eks. 850'">
+            Abonnement
+          </label>
+          <label class="form-radio-label">
+            <input type="radio" name="paymentType" value="per_visit"<%= (isEdit && review.paymentType === 'per_visit') ? ' checked' : '' %> onchange="document.getElementById('price-group').style.display='block'; document.getElementById('price-label-text').textContent='Ca. pris (kr/lunsj)'; document.getElementById('price-input').placeholder='f.eks. 85'">
+            Betale per gang
+          </label>
+        </div>
+      </fieldset>
+
+      <%
+        var showPrice = isEdit && review.paymentType;
+        var priceLabelText = 'Ca. pris';
+        var pricePlaceholder = 'f.eks. 850';
+        if (isEdit && review.paymentType === 'subscription') {
+          priceLabelText = 'Ca. pris (kr/mnd)';
+          pricePlaceholder = 'f.eks. 850';
+        } else if (isEdit && review.paymentType === 'per_visit') {
+          priceLabelText = 'Ca. pris (kr/lunsj)';
+          pricePlaceholder = 'f.eks. 85';
+        }
+      %>
+      <div id="price-group" style="<%= showPrice ? '' : 'display: none;' %>">
+        <label class="form-label" id="price-label-text" for="price-input"><%= priceLabelText %></label>
+        <input type="number" name="price" id="price-input" min="0" max="9999" placeholder="<%= pricePlaceholder %>" class="form-input" inputmode="numeric" value="<%= (isEdit && review.price != null) ? review.price : '' %>">
+      </div>
+
+      <fieldset class="form-fieldset">
+        <legend class="form-label">Serveringstype</legend>
+        <div class="form-radio-group">
+          <label class="form-radio-label">
+            <input type="radio" name="servingType" value="buffet"<%= (isEdit && review.servingType === 'buffet') ? ' checked' : '' %>>
+            Buffet
+          </label>
+          <label class="form-radio-label">
+            <input type="radio" name="servingType" value="specific_dish"<%= (isEdit && review.servingType === 'specific_dish') ? ' checked' : '' %>>
+            Kjøp en spesifikk rett
+          </label>
+          <label class="form-radio-label">
+            <input type="radio" name="servingType" value="by_weight"<%= (isEdit && review.servingType === 'by_weight') ? ' checked' : '' %>>
+            Betaling per vekt
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset class="form-fieldset">
+        <legend class="form-label">Ansattrabatt</legend>
+        <div class="form-radio-group">
+          <label class="form-radio-label">
+            <input type="radio" name="employeeDiscount" value="true"<%= (isEdit && review.employeeDiscount === true) ? ' checked' : '' %>>
+            Ja
+          </label>
+          <label class="form-radio-label">
+            <input type="radio" name="employeeDiscount" value="false"<%= (isEdit && review.employeeDiscount === false) ? ' checked' : '' %>>
+            Nei
+          </label>
+        </div>
+      </fieldset>
+
+    </div>
+  </details>
+
+  <button type="submit" class="btn btn-primary"><%= isEdit ? 'Oppdater anmeldelse' : 'Send anmeldelse' %></button>
+</form>

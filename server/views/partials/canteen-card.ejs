@@ -1,0 +1,14 @@
+<a href="/kantine/<%= canteen.addressKey %>" class="canteen-card" aria-label="<%= canteen.canteenName || canteen.street %>, <%= canteen.city %> — <%= canteen.averageRating ? canteen.averageRating.toFixed(1) + ' av 5' : 'ingen vurdering' %>, <%= canteen.totalReviews %> anmeldelse<%= canteen.totalReviews !== 1 ? 'r' : '' %>">
+  <div class="canteen-card-rating">
+    <%- include('star-rating', { rating: canteen.averageRating || 0 }) %>
+    <span class="canteen-card-score"><%= canteen.averageRating ? canteen.averageRating.toFixed(1) : '—' %></span>
+  </div>
+  <% if (canteen.canteenName) { %>
+    <h3 class="canteen-card-street"><%= canteen.canteenName %></h3>
+    <p class="canteen-card-city"><%= canteen.street %>, <%= canteen.postalCode %> <%= canteen.city %></p>
+  <% } else { %>
+    <h3 class="canteen-card-street"><%= canteen.street %></h3>
+    <p class="canteen-card-city"><%= canteen.postalCode %> <%= canteen.city %></p>
+  <% } %>
+  <p class="canteen-card-reviews"><%= canteen.totalReviews %> anmeldelse<%= canteen.totalReviews !== 1 ? 'r' : '' %></p>
+</a>

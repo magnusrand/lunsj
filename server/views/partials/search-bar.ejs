@@ -1,0 +1,21 @@
+<div class="search-bar" role="combobox" aria-expanded="false" aria-haspopup="listbox" aria-owns="search-results">
+  <input
+    type="text"
+    name="query"
+    placeholder="S&#248;k etter bedrift &hellip;"
+    autocomplete="off"
+    aria-label="Søk etter bedrift"
+    aria-autocomplete="list"
+    aria-controls="search-results"
+    aria-activedescendant=""
+    id="search-input"
+    hx-post="/api/sok-bedrift"
+    hx-trigger="input changed delay:400ms, keyup[key=='Enter' && !this.getAttribute('aria-activedescendant')]"
+    hx-target="#search-results"
+    hx-indicator="#search-spinner"
+  />
+  <span id="search-spinner" class="htmx-indicator spinner" role="status">
+    <span class="sr-only">Søker&hellip;</span>
+  </span>
+  <div id="search-results" aria-live="polite"></div>
+</div>

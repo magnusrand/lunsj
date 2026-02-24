@@ -1,0 +1,15 @@
+<li class="company-result" role="option" id="search-option-<%= index %>" aria-selected="false">
+  <button
+    hx-post="/api/velg-bedrift"
+    hx-vals='{"orgnr": "<%= company.organisasjonsnummer %>"}'
+    hx-target="#search-results"
+    hx-indicator="#search-spinner"
+    class="company-result-btn"
+    tabindex="-1"
+  >
+    <span class="company-name"><%= company.navn %></span>
+    <% if (company.address) { %>
+      <span class="company-address"><%= company.address %></span>
+    <% } %>
+  </button>
+</li>

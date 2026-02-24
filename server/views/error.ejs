@@ -1,0 +1,10 @@
+<% var title = 'Feil'; %>
+<%- include('partials/header', { title }) %>
+
+<div class="error-page">
+  <h1>Noe gikk galt</h1>
+  <p><%= typeof message !== 'undefined' ? message : 'En uventet feil oppstod.' %></p>
+  <a href="/" class="btn">Til forsiden</a>
+</div>
+
+<%- include('partials/footer') %>

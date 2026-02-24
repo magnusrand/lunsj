@@ -1,0 +1,11 @@
+<span class="stars" aria-label="<%= Math.round(rating * 10) / 10 %> av 5 stjerner"><%
+  for (let i = 1; i <= 5; i++) {
+    if (i <= Math.floor(rating)) {
+      %><span class="star star-full">&#9733;</span><%
+    } else if (i - rating < 1 && i - rating > 0) {
+      %><span class="star star-half">&#9733;</span><%
+    } else {
+      %><span class="star star-empty">&#9733;</span><%
+    }
+  }
+%></span>

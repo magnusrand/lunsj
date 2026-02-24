@@ -1,0 +1,22 @@
+<% if (reviews.length === 0) { %>
+  <p class="empty-text">Ingen anmeldelser enn&#229;.</p>
+<% } else { %>
+  <div class="recent-reviews-list">
+    <% reviews.forEach(review => { %>
+      <div class="recent-review-card">
+        <a href="/kantine/<%= review.addressKey %>" class="recent-review-link" aria-label="<%= review.rating %> av 5 stjerner<%= review.companyName ? ', ' + review.companyName : '' %> — <%= review.street %>, <%= review.city %>">
+          <div class="review-card-header">
+            <%- include('star-rating', { rating: review.rating }) %>
+            <% if (review.companyName) { %>
+              <span class="review-company"><%= review.companyName %></span>
+            <% } %>
+          </div>
+          <% if (review.comment) { %>
+            <p class="review-comment"><%= review.comment %></p>
+          <% } %>
+          <span class="recent-review-address"><%= review.street %>, <%= review.city %></span>
+        </a>
+      </div>
+    <% }) %>
+  </div>
+<% } %>
