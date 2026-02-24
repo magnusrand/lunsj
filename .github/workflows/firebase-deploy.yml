@@ -22,9 +22,10 @@ jobs:
         run: npm ci
         working-directory: server
 
-      - uses: FirebaseExtended/action-hosting-deploy@v0
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
         with:
-          repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_GOD_LUNSJ }}
-          channelId: live
-          projectId: god-lunsj
+          credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_GOD_LUNSJ }}
+
+      - name: Deploy to Firebase
+        run: npx firebase-tools deploy --only hosting,functions --project god-lunsj --non-interactive --force
