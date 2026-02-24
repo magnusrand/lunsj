@@ -50,6 +50,20 @@ expressApp.set("views", path.join(__dirname, "views"));
 expressApp.use(express.urlencoded({ extended: true }));
 expressApp.use(express.json());
 
+/**
+ * Redirect to a canteen page.
+ * For HTMX requests, uses HX-Redirect header.
+ * Falls back to a 303 redirect for non-HTMX requests.
+ */
+function redirectToCanteen(req, res, addressKey) {
+  const url = `/kantine/${encodeURIComponent(addressKey)}`;
+  if (req.headers["hx-request"]) {
+    res.set("HX-Redirect", url);
+    return res.send("");
+  }
+  return res.redirect(303, url);
+}
+
 // Landing page
 expressApp.get("/", async (req, res) => {
   try {
@@ -114,8 +128,7 @@ expressApp.post("/api/velg-bedrift", async (req, res) => {
     // Second call: user has made a choice
     if (canteenChoice === "existing" && selectedCanteen) {
       await createOrUpdateCanteen(selectedCanteen, company, { baseAddressKey });
-      res.set("HX-Redirect", `/kantine/${selectedCanteen}`);
-      return res.send("");
+      return redirectToCanteen(req, res, selectedCanteen);
     }
     if (canteenChoice === "new") {
       const newKey = await getNextCanteenKey(baseAddressKey);
@@ -124,8 +137,7 @@ expressApp.post("/api/velg-bedrift", async (req, res) => {
         baseAddressKey,
         canteenName: trimmedName || undefined,
       });
-      res.set("HX-Redirect", `/kantine/${newKey}`);
-      return res.send("");
+      return redirectToCanteen(req, res, newKey);
     }
 
     // First call: check if canteens exist at this address
@@ -133,13 +145,12 @@ expressApp.post("/api/velg-bedrift", async (req, res) => {
 
     // Check if this org already belongs to a kantine at this address
     const existingForOrg = existingCanteens.find(
-      (c) => c.companies && c.companies.some((co) => co.orgnr === orgnr)
+      (c) => c.companies && c.companies.some((co) => co.organisasjonsnummer === orgnr)
     );
     if (existingForOrg) {
       // Returning org — update timestamp and redirect directly
       await createOrUpdateCanteen(existingForOrg.addressKey, company, { baseAddressKey });
-      res.set("HX-Redirect", `/kantine/${existingForOrg.addressKey}`);
-      return res.send("");
+      return redirectToCanteen(req, res, existingForOrg.addressKey);
     }
 
     // First time for this org — show chooser (with or without existing canteens)
@@ -194,8 +205,7 @@ expressApp.post("/api/anmeldelse", async (req, res) => {
       );
     }
 
-    res.set("HX-Redirect", `/kantine/${addressKey}`);
-    res.send("");
+    return redirectToCanteen(req, res, addressKey);
   } catch (err) {
     console.error("Review error:", err);
     res.send('<p class="error-text">Kunne ikke lagre anmeldelsen. Prøv igjen.</p>');
@@ -266,8 +276,7 @@ expressApp.post("/api/endre-anmeldelse", async (req, res) => {
 
     await updateReview(addressKey, reviewId, existing, newData);
 
-    res.set("HX-Redirect", `/kantine/${addressKey}`);
-    res.send("");
+    return redirectToCanteen(req, res, addressKey);
   } catch (err) {
     console.error("Update review error:", err);
     res.send('<p class="error-text">Kunne ikke oppdatere anmeldelsen. Prøv igjen.</p>');
