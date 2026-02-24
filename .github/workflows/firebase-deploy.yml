@@ -28,4 +28,4 @@ jobs:
           credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_GOD_LUNSJ }}
 
       - name: Deploy to Firebase
-        run: npx firebase-tools deploy --only hosting,functions --project god-lunsj --non-interactive --force
+        run: npx firebase-tools deploy --only hosting,functions:app --project god-lunsj --non-interactive --force
