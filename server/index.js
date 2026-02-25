@@ -287,7 +287,7 @@ expressApp.post("/api/endre-anmeldelse", async (req, res) => {
 // Recent reviews (HTMX lazy load)
 expressApp.get("/api/siste-anmeldelser", async (req, res) => {
   try {
-    const reviews = await getRecentReviews(8);
+    const reviews = await getRecentReviews(3);
     res.render("partials/recent-reviews", { reviews });
   } catch (err) {
     console.error("Recent reviews error:", err);
