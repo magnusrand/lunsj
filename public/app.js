@@ -34,6 +34,29 @@
   checkExistingReview();
 })();
 
+// Show price input when a payment type radio button is selected
+(function () {
+  var config = {
+    subscription: { label: "Ca. pris (kr/mnd)", placeholder: "f.eks. 850" },
+    per_visit: { label: "Ca. pris (kr/lunsj)", placeholder: "f.eks. 85" },
+  };
+
+  function handlePaymentTypeChange(e) {
+    var radio = e.target;
+    if (radio.name !== "paymentType" || !radio.value) return;
+    var c = config[radio.value];
+    if (!c) return;
+    var group = document.getElementById("price-group");
+    var label = document.getElementById("price-label-text");
+    var input = document.getElementById("price-input");
+    if (group) group.style.display = "block";
+    if (label) label.textContent = c.label;
+    if (input) input.placeholder = c.placeholder;
+  }
+
+  document.body.addEventListener("change", handlePaymentTypeChange);
+})();
+
 // Keyboard navigation for search results (ARIA combobox)
 (function () {
   var input = document.getElementById("search-input");

@@ -23,19 +23,29 @@
     </li>
     <% } %>
 
-    <% if (info.priceSubscription && info.priceSubscription.median != null) { %>
+    <% if (info.priceSubscription && info.priceSubscription.values && info.priceSubscription.values.length > 0) {
+      const vals = info.priceSubscription.values;
+      const minVal = Math.min(...vals);
+      const maxVal = Math.max(...vals);
+      const priceText = minVal === maxVal ? minVal + ' kr/mnd' : minVal + '–' + maxVal + ' kr/mnd';
+    %>
     <li class="info-item">
       <span class="info-label">Ca. pris (abo.)</span>
-      <span class="info-value"><%= info.priceSubscription.median %> kr/mnd</span>
-      <span class="info-reporters">Basert på <%= info.priceSubscription.values.length %> svar</span>
+      <span class="info-value"><%= priceText %></span>
+      <span class="info-reporters">Basert på <%= vals.length %> svar</span>
     </li>
     <% } %>
 
-    <% if (info.pricePerVisit && info.pricePerVisit.median != null) { %>
+    <% if (info.pricePerVisit && info.pricePerVisit.values && info.pricePerVisit.values.length > 0) {
+      const vals = info.pricePerVisit.values;
+      const minVal = Math.min(...vals);
+      const maxVal = Math.max(...vals);
+      const priceText = minVal === maxVal ? minVal + ' kr/lunsj' : minVal + '–' + maxVal + ' kr/lunsj';
+    %>
     <li class="info-item">
       <span class="info-label">Ca. pris (per gang)</span>
-      <span class="info-value"><%= info.pricePerVisit.median %> kr/lunsj</span>
-      <span class="info-reporters">Basert på <%= info.pricePerVisit.values.length %> svar</span>
+      <span class="info-value"><%= priceText %></span>
+      <span class="info-reporters">Basert på <%= vals.length %> svar</span>
     </li>
     <% } %>
 

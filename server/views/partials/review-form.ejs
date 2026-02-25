@@ -1,6 +1,6 @@
 <% var isEdit = (typeof review !== 'undefined' && review); %>
 <% if (isEdit) { %>
-  <p class="review-edit-notice">Du har allerede anmeldt denne kantinen. Du kan endre anmeldelsen din under.</p>
+  <p class="review-edit-notice">Takk for anmeldelsen din! Du kan endre anmeldelsen din under.</p>
 <% } %>
 <form
   class="review-form"
@@ -48,11 +48,11 @@
         <legend class="form-label">Betalingstype</legend>
         <div class="form-radio-group">
           <label class="form-radio-label">
-            <input type="radio" name="paymentType" value="subscription"<%= (isEdit && review.paymentType === 'subscription') ? ' checked' : '' %> onchange="document.getElementById('price-group').style.display='block'; document.getElementById('price-label-text').textContent='Ca. pris (kr/mnd)'; document.getElementById('price-input').placeholder='f.eks. 850'">
+            <input type="radio" name="paymentType" value="subscription"<%= (isEdit && review.paymentType === 'subscription') ? ' checked' : '' %>>
             Abonnement
           </label>
           <label class="form-radio-label">
-            <input type="radio" name="paymentType" value="per_visit"<%= (isEdit && review.paymentType === 'per_visit') ? ' checked' : '' %> onchange="document.getElementById('price-group').style.display='block'; document.getElementById('price-label-text').textContent='Ca. pris (kr/lunsj)'; document.getElementById('price-input').placeholder='f.eks. 85'">
+            <input type="radio" name="paymentType" value="per_visit"<%= (isEdit && review.paymentType === 'per_visit') ? ' checked' : '' %>>
             Betale per gang
           </label>
         </div>
