@@ -147,6 +147,12 @@ main.container {
   font-size: 0.8rem;
 }
 
+.footer-credit a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
 /* === Typography === */
 h1 {
   font-size: 2rem;
