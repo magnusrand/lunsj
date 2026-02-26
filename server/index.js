@@ -39,13 +39,19 @@ expressApp.use(
 
 const writeLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 20,
+  max: 50,
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+const selectCompanyLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
   standardHeaders: true,
   legacyHeaders: false,
 });
 expressApp.post("/api/anmeldelse", writeLimiter);
 expressApp.post("/api/endre-anmeldelse", writeLimiter);
-expressApp.post("/api/velg-bedrift", writeLimiter);
+expressApp.post("/api/velg-bedrift", selectCompanyLimiter);
 expressApp.post("/api/tilbakemelding", writeLimiter);
 
 expressApp.set("view engine", "ejs");
