@@ -391,6 +391,7 @@ async function getReviews(addressKey, limit = 20) {
 async function getTopCanteens(limit = 6) {
   const snapshot = await db()
     .collection("canteens")
+    .where("totalReviews", ">", 0)
     .orderBy("totalReviews", "desc")
     .limit(limit)
     .get();
