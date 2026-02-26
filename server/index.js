@@ -31,7 +31,7 @@ expressApp.use(
       directives: {
         ...helmet.contentSecurityPolicy.getDefaultDirectives(),
         "script-src": ["'self'", "https://unpkg.com", "https://cloud.umami.is"],
-        "connect-src": ["'self'", "https://cloud.umami.is"],
+        "connect-src": ["'self'", "https://cloud.umami.is", "https://api-gateway.umami.dev"],
       },
     },
   })
