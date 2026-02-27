@@ -144,6 +144,15 @@
   });
 })();
 
+// Reset feedback form on successful submit
+(function () {
+  var form = document.getElementById("feedback-form");
+  if (!form) return;
+  form.addEventListener("htmx:afterRequest", function (e) {
+    if (e.detail.successful) form.reset();
+  });
+})();
+
 // Feedback popover aria-expanded sync
 (function () {
   var toggle = document.querySelector(".feedback-toggle");

@@ -8,7 +8,7 @@
         <button class="feedback-toggle" aria-expanded="false" aria-controls="feedback-popover">Gi tilbakemelding</button>
       </p>
       <div id="feedback-popover" class="feedback-popover" role="dialog" aria-label="Gi tilbakemelding">
-        <form hx-post="/api/tilbakemelding" hx-target="#feedback-response" hx-swap="innerHTML" hx-on::after-request="if(event.detail.successful) this.reset()">
+        <form id="feedback-form" hx-post="/api/tilbakemelding" hx-target="#feedback-response" hx-swap="innerHTML">
           <label for="feedback-text" class="form-label">Hva synes du om Lunsjguiden?</label>
           <textarea id="feedback-text" name="message" class="form-textarea" rows="3" maxlength="1000" placeholder="Skriv din tilbakemelding her..." required></textarea>
           <div class="feedback-actions">
