@@ -11,6 +11,15 @@
     <% } %>
   </header>
 
+  <% if (canteen.lat != null && canteen.lon != null) { %>
+  <section class="canteen-minimap">
+    <a href="/kart?kantine=<%= encodeURIComponent(canteen.addressKey) %>" class="minimap-link">
+      <div id="minimap" class="minimap" data-lat="<%= canteen.lat %>" data-lon="<%= canteen.lon %>" aria-hidden="true"></div>
+      <span class="minimap-overlay">Se på kart &rarr;</span>
+    </a>
+  </section>
+  <% } %>
+
   <div class="canteen-summary">
     <div class="rating-large">
       <span class="rating-number"><%= canteen.averageRating ? canteen.averageRating.toFixed(1) : '—' %></span>
@@ -35,6 +44,10 @@
     </div>
     <% } %>
   </div>
+
+  <% if (typeof showLowScore !== 'undefined' && showLowScore) { %>
+  <p class="low-rating-nudge">Misfornøyd med kantinen? Kanskje du finner noe bedre i nærheten på <a href="https://www.konsulentshawarma.no/" target="_blank" rel="noopener">Konsulent-Shawarma</a>!</p>
+  <% } %>
 
   <%- include('partials/canteen-info', { canteen }) %>
 

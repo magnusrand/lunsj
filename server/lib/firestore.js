@@ -48,7 +48,7 @@ async function getCanteen(addressKey) {
  * Adds the company to the companies array if not already present.
  * Supports baseAddressKey and canteenName for multi-canteen addresses.
  */
-async function createOrUpdateCanteen(addressKey, company, { baseAddressKey, canteenName } = {}) {
+async function createOrUpdateCanteen(addressKey, company, { baseAddressKey, canteenName, coordinates } = {}) {
   const ref = db().collection("canteens").doc(addressKey);
 
   await db().runTransaction(async (tx) => {
@@ -77,6 +77,10 @@ async function createOrUpdateCanteen(addressKey, company, { baseAddressKey, cant
         updatedAt: FieldValue.serverTimestamp(),
       };
       if (canteenName) data.canteenName = canteenName;
+      if (coordinates) {
+        data.lat = coordinates.lat;
+        data.lon = coordinates.lon;
+      }
       tx.set(ref, data);
     } else {
       const data = doc.data();
@@ -86,6 +90,10 @@ async function createOrUpdateCanteen(addressKey, company, { baseAddressKey, cant
       const updates = { updatedAt: FieldValue.serverTimestamp() };
       if (!data.baseAddressKey) {
         updates.baseAddressKey = baseAddressKey || addressKey;
+      }
+      if (coordinates && data.lat == null) {
+        updates.lat = coordinates.lat;
+        updates.lon = coordinates.lon;
       }
       if (!exists) {
         updates.companies = FieldValue.arrayUnion({
@@ -430,6 +438,39 @@ async function getRecentReviews(limit = 8) {
 }
 
 /**
+ * Get all canteens that have coordinates and at least one review.
+ * Returns lightweight objects for the map page.
+ */
+async function getAllCanteensWithCoordinates() {
+  const snapshot = await db()
+    .collection("canteens")
+    .where("totalReviews", ">", 0)
+    .get();
+
+  return snapshot.docs
+    .map((doc) => doc.data())
+    .filter((c) => c.lat != null && c.lon != null)
+    .map((c) => ({
+      addressKey: c.addressKey,
+      street: c.street,
+      postalCode: c.postalCode,
+      city: c.city,
+      canteenName: c.canteenName || null,
+      averageRating: c.averageRating,
+      totalReviews: c.totalReviews,
+      lat: c.lat,
+      lon: c.lon,
+    }));
+}
+
+/**
+ * Backfill coordinates on an existing canteen doc.
+ */
+async function backfillCoordinates(addressKey, lat, lon) {
+  await db().collection("canteens").doc(addressKey).update({ lat, lon });
+}
+
+/**
  * Add general feedback to the feedback collection.
  */
 async function addFeedback(message) {
@@ -451,4 +492,6 @@ module.exports = {
   getCanteensAtAddress,
   getNextCanteenKey,
   addFeedback,
+  getAllCanteensWithCoordinates,
+  backfillCoordinates,
 };

@@ -16,6 +16,10 @@
     />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="/styles.css" />
+    <% if (typeof needsMap !== 'undefined' && needsMap) { %>
+    <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.17.0/dist/maplibre-gl.css" />
+    <script src="https://unpkg.com/maplibre-gl@5.17.0/dist/maplibre-gl.js"></script>
+    <% } %>
     <script defer src="https://cloud.umami.is/script.js" data-website-id="0709184e-38cb-48ad-8d47-4ab049e34db3"></script>
     <script
       src="https://unpkg.com/htmx.org@2.0.4"
@@ -27,8 +31,9 @@
     <a href="#main-content" class="skip-link">Hopp til hovedinnhold</a>
 
     <nav class="nav" aria-label="Hovednavigasjon">
-      <div class="container">
+      <div class="container nav-container">
         <a href="/" class="nav-logo">Lunsjguiden</a>
+        <a href="/kart" class="nav-link">Kart</a>
       </div>
     </nav>
 

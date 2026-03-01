@@ -1,0 +1,14 @@
+<%- include('partials/header', { title: 'Kantinekart', description: 'Se alle anmeldte kantiner på kartet.' }) %>
+
+<div class="map-page">
+  <div class="map-header">
+    <h1>Kantinekart</h1>
+    <p class="map-subtitle">Utforsk anmeldte kantiner i Norge</p>
+  </div>
+  <div id="fullmap" class="fullmap" role="application" aria-label="Kart over kantiner"
+    data-canteens="<%- encodeURIComponent(JSON.stringify(canteens)) %>"
+    data-focus="<%- focusCanteen ? encodeURIComponent(JSON.stringify(focusCanteen)) : '' %>"
+  ></div>
+</div>
+
+<%- include('partials/footer') %>
