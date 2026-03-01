@@ -157,6 +157,65 @@ async function getNextCanteenKey(baseAddressKey) {
 }
 
 /**
+ * Create or update a canteen document from manual address entry (no org number).
+ * Adds the company name to the companies array if not already present.
+ */
+async function createManualCanteen(addressKey, { street, postalCode, city, companyName, baseAddressKey, canteenName, coordinates }) {
+  const ref = db().collection("canteens").doc(addressKey);
+
+  await db().runTransaction(async (tx) => {
+    const doc = await tx.get(ref);
+
+    if (!doc.exists) {
+      const data = {
+        addressKey,
+        baseAddressKey: baseAddressKey || addressKey,
+        street,
+        postalCode,
+        city,
+        companies: [
+          {
+            name: companyName,
+            addedAt: new Date(),
+          },
+        ],
+        averageRating: 0,
+        totalReviews: 0,
+        ratingDistribution: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 },
+        createdAt: FieldValue.serverTimestamp(),
+        updatedAt: FieldValue.serverTimestamp(),
+      };
+      if (canteenName) data.canteenName = canteenName;
+      if (coordinates) {
+        data.lat = coordinates.lat;
+        data.lon = coordinates.lon;
+      }
+      tx.set(ref, data);
+    } else {
+      const data = doc.data();
+      const exists = data.companies.some((c) => c.name === companyName);
+      const updates = { updatedAt: FieldValue.serverTimestamp() };
+      if (!data.baseAddressKey) {
+        updates.baseAddressKey = baseAddressKey || addressKey;
+      }
+      if (coordinates && data.lat == null) {
+        updates.lat = coordinates.lat;
+        updates.lon = coordinates.lon;
+      }
+      if (!exists) {
+        updates.companies = FieldValue.arrayUnion({
+          name: companyName,
+          addedAt: new Date(),
+        });
+      }
+      if (Object.keys(updates).length > 1 || !exists) {
+        tx.update(ref, updates);
+      }
+    }
+  });
+}
+
+/**
  * Add a review to a canteen's subcollection.
  * Uses a transaction to update the canteen's aggregate fields.
  * Returns { duplicate: true } if the clientId already submitted a review.
@@ -483,6 +542,7 @@ async function addFeedback(message) {
 module.exports = {
   getCanteen,
   createOrUpdateCanteen,
+  createManualCanteen,
   addReview,
   getReviews,
   getReviewByClientId,

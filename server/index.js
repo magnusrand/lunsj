@@ -13,6 +13,7 @@ const { geocodeAddress } = require("./lib/kartverket");
 const {
   getCanteen,
   createOrUpdateCanteen,
+  createManualCanteen,
   addReview,
   getReviews,
   getReviewByClientId,
@@ -59,6 +60,7 @@ const selectCompanyLimiter = rateLimit({
 expressApp.post("/api/anmeldelse", writeLimiter);
 expressApp.post("/api/endre-anmeldelse", writeLimiter);
 expressApp.post("/api/velg-bedrift", selectCompanyLimiter);
+expressApp.post("/api/legg-til-kantine", writeLimiter);
 expressApp.post("/api/tilbakemelding", writeLimiter);
 
 expressApp.set("view engine", "ejs");
@@ -331,6 +333,89 @@ expressApp.get("/api/siste-anmeldelser", async (req, res) => {
   } catch (err) {
     console.error("Recent reviews error:", err);
     res.send("");
+  }
+});
+
+// Manual canteen form
+expressApp.get("/api/manuell-kantine", (req, res) => {
+  res.render("partials/manual-canteen-form");
+});
+
+// Manual canteen creation
+expressApp.post("/api/legg-til-kantine", async (req, res) => {
+  const { companyName, street, postalCode, city, canteenChoice, selectedCanteen, canteenName } = req.body;
+
+  const trimmedCompany = (companyName || "").trim();
+  const trimmedStreet = (street || "").trim();
+  const trimmedPostal = (postalCode || "").trim();
+  const trimmedCity = (city || "").trim();
+
+  if (!trimmedCompany || !trimmedStreet || !trimmedPostal || !trimmedCity) {
+    return res.send('<p class="error-text">Alle feltene m&aring; fylles ut.</p>');
+  }
+  if (!/^[0-9]{4}$/.test(trimmedPostal)) {
+    return res.send('<p class="error-text">Postnummer m&aring; v&aelig;re fire siffer.</p>');
+  }
+
+  try {
+    const baseAddressKey = normalizeAddress(trimmedStreet, trimmedPostal, trimmedCity);
+    const coordinates = await geocodeAddress(trimmedStreet, trimmedPostal, trimmedCity);
+
+    // Second call: user picked an existing canteen
+    if (canteenChoice === "existing" && selectedCanteen) {
+      await createManualCanteen(selectedCanteen, {
+        street: trimmedStreet,
+        postalCode: trimmedPostal,
+        city: trimmedCity,
+        companyName: trimmedCompany,
+        baseAddressKey,
+        coordinates,
+      });
+      return redirectToCanteen(req, res, selectedCanteen);
+    }
+
+    // Second call: user chose to create a new canteen
+    if (canteenChoice === "new") {
+      const newKey = await getNextCanteenKey(baseAddressKey);
+      const trimmedCanteenName = (canteenName || "").trim();
+      await createManualCanteen(newKey, {
+        street: trimmedStreet,
+        postalCode: trimmedPostal,
+        city: trimmedCity,
+        companyName: trimmedCompany,
+        baseAddressKey,
+        canteenName: trimmedCanteenName || undefined,
+        coordinates,
+      });
+      return redirectToCanteen(req, res, newKey);
+    }
+
+    // First call: check for existing canteens at this address
+    const existingCanteens = await getCanteensAtAddress(baseAddressKey);
+
+    if (existingCanteens.length > 0) {
+      // Show chooser with existing canteens
+      return res.render("partials/canteen-chooser", {
+        canteens: existingCanteens,
+        companyName: trimmedCompany,
+        street: trimmedStreet,
+        manualAddress: { street: trimmedStreet, postalCode: trimmedPostal, city: trimmedCity },
+      });
+    }
+
+    // No existing canteens — create directly
+    await createManualCanteen(baseAddressKey, {
+      street: trimmedStreet,
+      postalCode: trimmedPostal,
+      city: trimmedCity,
+      companyName: trimmedCompany,
+      baseAddressKey,
+      coordinates,
+    });
+    return redirectToCanteen(req, res, baseAddressKey);
+  } catch (err) {
+    console.error("Manual canteen error:", err);
+    res.send('<p class="error-text">Noe gikk galt. Pr&oslash;v igjen.</p>');
   }
 });
 

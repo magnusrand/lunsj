@@ -1182,6 +1182,87 @@ summary:focus-visible {
   color: var(--primary-dark);
 }
 
+/* === Manual Add Button === */
+.manual-add-btn {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  width: 100%;
+  padding: 0.875rem 1.25rem;
+  margin-top: 0.5rem;
+  background: var(--bg-card);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  transition: border-color 0.2s, background-color 0.15s;
+}
+
+.manual-add-btn:hover {
+  border-color: var(--primary-light);
+  background: var(--bg);
+}
+
+.manual-add-title {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--primary);
+}
+
+.manual-add-subtitle {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+/* === Manual Canteen Form === */
+.manual-canteen-form {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+}
+
+.manual-canteen-form h3 {
+  margin-bottom: 1rem;
+}
+
+.manual-canteen-form .form-label {
+  margin-top: 0.75rem;
+}
+
+.manual-canteen-form .form-label:first-of-type {
+  margin-top: 0;
+}
+
+.manual-canteen-form .form-input {
+  margin-bottom: 0;
+}
+
+.form-row {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.form-row .form-label {
+  margin-top: 0;
+}
+
+.form-row-postal {
+  flex: 0 0 5.5rem;
+}
+
+.form-row-city {
+  flex: 1;
+}
+
+.manual-form-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+}
+
 /* === Responsive === */
 @media (max-width: 640px) {
   .hero h1 {
