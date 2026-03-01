@@ -1,0 +1,76 @@
+<div class="manual-canteen-form">
+  <h3>Legg til kantine manuelt</h3>
+  <form
+    action="/api/legg-til-kantine"
+    method="post"
+    hx-post="/api/legg-til-kantine"
+    hx-target="#search-results"
+    hx-indicator="#search-spinner"
+  >
+    <label for="manualCompanyName" class="form-label">Hvor jobber du?</label>
+    <input
+      type="text"
+      id="manualCompanyName"
+      name="companyName"
+      placeholder="f.eks. Mitt Firma AS"
+      class="form-input"
+      required
+      maxlength="200"
+    >
+
+    <label for="manualStreet" class="form-label">Gateadresse</label>
+    <input
+      type="text"
+      id="manualStreet"
+      name="street"
+      placeholder="f.eks. Storgata 1"
+      class="form-input"
+      required
+      maxlength="200"
+    >
+
+    <div class="form-row">
+      <div class="form-row-field form-row-postal">
+        <label for="manualPostalCode" class="form-label">Postnr.</label>
+        <input
+          type="text"
+          id="manualPostalCode"
+          name="postalCode"
+          placeholder="0182"
+          class="form-input"
+          required
+          inputmode="numeric"
+          pattern="[0-9]{4}"
+          maxlength="4"
+        >
+      </div>
+      <div class="form-row-field form-row-city">
+        <label for="manualCity" class="form-label">Sted</label>
+        <input
+          type="text"
+          id="manualCity"
+          name="city"
+          placeholder="Oslo"
+          class="form-input"
+          required
+          maxlength="100"
+        >
+      </div>
+    </div>
+
+    <label for="manualCanteenName" class="form-label">Kantinens plassering / navn (valgfritt)</label>
+    <input
+      type="text"
+      id="manualCanteenName"
+      name="canteenName"
+      placeholder="f.eks. &#171;2. etasje&#187;"
+      class="form-input"
+      maxlength="100"
+    >
+
+    <div class="manual-form-actions">
+      <button type="submit" class="btn btn-primary">Finn eller opprett kantine</button>
+      <button type="button" class="btn" onclick="document.getElementById('search-results').innerHTML = ''">Tilbake</button>
+    </div>
+  </form>
+</div>

@@ -8,3 +8,12 @@
     <% }) %>
   </ul>
 <% } %>
+<button
+  class="manual-add-btn"
+  hx-get="/api/manuell-kantine"
+  hx-target="#search-results"
+  hx-indicator="#search-spinner"
+>
+  <span class="manual-add-title">Legg til kantine manuelt</span>
+  <span class="manual-add-subtitle">Skriv inn adressen selv</span>
+</button>
