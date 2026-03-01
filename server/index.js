@@ -9,6 +9,7 @@ admin.initializeApp();
 
 const { searchCompanies, getCompany } = require("./lib/brreg");
 const { normalizeAddress } = require("./lib/address");
+const { geocodeAddress } = require("./lib/kartverket");
 const {
   getCanteen,
   createOrUpdateCanteen,
@@ -21,6 +22,8 @@ const {
   getCanteensAtAddress,
   getNextCanteenKey,
   addFeedback,
+  getAllCanteensWithCoordinates,
+  backfillCoordinates,
 } = require("./lib/firestore");
 
 const expressApp = express();
@@ -31,7 +34,11 @@ expressApp.use(
       directives: {
         ...helmet.contentSecurityPolicy.getDefaultDirectives(),
         "script-src": ["'self'", "https://unpkg.com", "https://cloud.umami.is"],
-        "connect-src": ["'self'", "https://cloud.umami.is", "https://api-gateway.umami.dev"],
+        "style-src": ["'self'", "'unsafe-inline'", "https://unpkg.com", "https://fonts.googleapis.com"],
+        "connect-src": ["'self'", "https://cloud.umami.is", "https://api-gateway.umami.dev", "https://tiles.openfreemap.org", "https://unpkg.com"],
+        "font-src": ["'self'", "https://fonts.gstatic.com"],
+        "img-src": ["'self'", "data:", "https://*.openfreemap.org"],
+        "worker-src": ["blob:"],
       },
     },
   })
@@ -64,8 +71,9 @@ expressApp.use(express.json());
  * For HTMX requests, uses HX-Redirect header.
  * Falls back to a 303 redirect for non-HTMX requests.
  */
-function redirectToCanteen(req, res, addressKey) {
-  const url = `/kantine/${encodeURIComponent(addressKey)}`;
+function redirectToCanteen(req, res, addressKey, query) {
+  let url = `/kantine/${encodeURIComponent(addressKey)}`;
+  if (query) url += `?${query}`;
   if (req.headers["hx-request"]) {
     res.set("HX-Redirect", url);
     return res.send("");
@@ -91,8 +99,22 @@ expressApp.get("/kantine/:addressKey", async (req, res) => {
     if (!canteen) {
       return res.status(404).render("404");
     }
+
+    // Lazy geocoding backfill
+    if (canteen.lat == null) {
+      const coords = await geocodeAddress(canteen.street, canteen.postalCode, canteen.city);
+      if (coords) {
+        canteen.lat = coords.lat;
+        canteen.lon = coords.lon;
+        // Fire-and-forget Firestore backfill
+        backfillCoordinates(req.params.addressKey, coords.lat, coords.lon).catch(() => {});
+      }
+    }
+
     const reviews = await getReviews(req.params.addressKey, 20);
-    res.render("canteen", { canteen, reviews });
+    const needsMap = canteen.lat != null;
+    const showLowScore = req.query.low_score === "1";
+    res.render("canteen", { canteen, reviews, needsMap, showLowScore });
   } catch (err) {
     console.error("Error loading canteen:", err);
     res.status(500).render("error", { message: "Noe gikk galt." });
@@ -134,9 +156,16 @@ expressApp.post("/api/velg-bedrift", async (req, res) => {
       company.address.city
     );
 
+    // Geocode the company address (fire once, reuse for all canteen writes)
+    const coordinates = await geocodeAddress(
+      company.address.street,
+      company.address.postalCode,
+      company.address.city
+    );
+
     // Second call: user has made a choice
     if (canteenChoice === "existing" && selectedCanteen) {
-      await createOrUpdateCanteen(selectedCanteen, company, { baseAddressKey });
+      await createOrUpdateCanteen(selectedCanteen, company, { baseAddressKey, coordinates });
       return redirectToCanteen(req, res, selectedCanteen);
     }
     if (canteenChoice === "new") {
@@ -145,6 +174,7 @@ expressApp.post("/api/velg-bedrift", async (req, res) => {
       await createOrUpdateCanteen(newKey, company, {
         baseAddressKey,
         canteenName: trimmedName || undefined,
+        coordinates,
       });
       return redirectToCanteen(req, res, newKey);
     }
@@ -158,7 +188,7 @@ expressApp.post("/api/velg-bedrift", async (req, res) => {
     );
     if (existingForOrg) {
       // Returning org — update timestamp and redirect directly
-      await createOrUpdateCanteen(existingForOrg.addressKey, company, { baseAddressKey });
+      await createOrUpdateCanteen(existingForOrg.addressKey, company, { baseAddressKey, coordinates });
       return redirectToCanteen(req, res, existingForOrg.addressKey);
     }
 
@@ -215,7 +245,7 @@ expressApp.post("/api/anmeldelse", async (req, res) => {
       );
     }
 
-    return redirectToCanteen(req, res, addressKey);
+    return redirectToCanteen(req, res, addressKey, ratingNum <= 2 ? "low_score=1" : undefined);
   } catch (err) {
     console.error("Review error:", err);
     res.send('<p class="error-text">Kunne ikke lagre anmeldelsen. Prøv igjen.</p>');
@@ -286,7 +316,7 @@ expressApp.post("/api/endre-anmeldelse", async (req, res) => {
 
     await updateReview(addressKey, reviewId, existing, newData);
 
-    return redirectToCanteen(req, res, addressKey);
+    return redirectToCanteen(req, res, addressKey, ratingNum <= 2 ? "low_score=1" : undefined);
   } catch (err) {
     console.error("Update review error:", err);
     res.send('<p class="error-text">Kunne ikke oppdatere anmeldelsen. Prøv igjen.</p>');
@@ -316,6 +346,19 @@ expressApp.post("/api/tilbakemelding", async (req, res) => {
   } catch (err) {
     console.error("Feedback error:", err);
     res.send('<p class="error-text">Kunne ikke sende tilbakemeldingen. Prøv igjen.</p>');
+  }
+});
+
+// Map page
+expressApp.get("/kart", async (req, res) => {
+  try {
+    const canteens = await getAllCanteensWithCoordinates();
+    const focusKey = req.query.kantine || null;
+    const focusCanteen = focusKey ? canteens.find((c) => c.addressKey === focusKey) : null;
+    res.render("map", { canteens, focusCanteen, needsMap: true });
+  } catch (err) {
+    console.error("Error loading map:", err);
+    res.status(500).render("error", { message: "Noe gikk galt." });
   }
 });
 
