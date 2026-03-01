@@ -42,10 +42,11 @@
 
   map.addControl(new maplibregl.NavigationControl(), "top-right");
 
-  var bounds = new maplibregl.LngLatBounds();
+  var bounds = null;
   var focusMarker = null;
 
   canteens.forEach(function (c) {
+    if (c.lat == null || c.lon == null) return;
     var stars = c.averageRating ? c.averageRating.toFixed(1) : "—";
     var name = c.canteenName || c.street;
     var address = c.street + ", " + c.postalCode + " " + c.city;
@@ -65,7 +66,8 @@
       .setPopup(popup)
       .addTo(map);
 
-    bounds.extend([c.lon, c.lat]);
+    if (!bounds) bounds = new maplibregl.LngLatBounds([c.lon, c.lat], [c.lon, c.lat]);
+    else bounds.extend([c.lon, c.lat]);
 
     if (focus && c.addressKey === focus.addressKey) {
       focusMarker = marker;
@@ -74,7 +76,7 @@
 
   if (focusMarker) {
     focusMarker.togglePopup();
-  } else if (canteens.length > 1) {
+  } else if (bounds && canteens.length > 1) {
     map.fitBounds(bounds, { padding: 50, maxZoom: 13 });
   }
 

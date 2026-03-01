@@ -35,7 +35,7 @@ expressApp.use(
         ...helmet.contentSecurityPolicy.getDefaultDirectives(),
         "script-src": ["'self'", "https://unpkg.com", "https://cloud.umami.is"],
         "style-src": ["'self'", "'unsafe-inline'", "https://unpkg.com", "https://fonts.googleapis.com"],
-        "connect-src": ["'self'", "https://cloud.umami.is", "https://api-gateway.umami.dev", "https://tiles.openfreemap.org"],
+        "connect-src": ["'self'", "https://cloud.umami.is", "https://api-gateway.umami.dev", "https://tiles.openfreemap.org", "https://unpkg.com"],
         "font-src": ["'self'", "https://fonts.gstatic.com"],
         "img-src": ["'self'", "data:", "https://*.openfreemap.org"],
         "worker-src": ["blob:"],
