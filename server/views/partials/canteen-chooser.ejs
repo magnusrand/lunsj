@@ -4,6 +4,15 @@
 
   <div class="canteen-chooser-options">
     <% canteens.forEach(c => { %>
+    <% if (typeof manualAddress !== 'undefined' && manualAddress) { %>
+    <button
+      class="canteen-chooser-card"
+      hx-post="/api/legg-til-kantine"
+      hx-vals='<%= JSON.stringify({ companyName, street: manualAddress.street, postalCode: manualAddress.postalCode, city: manualAddress.city, canteenChoice: "existing", selectedCanteen: c.addressKey }) %>'
+      hx-target="#search-results"
+      hx-indicator="#search-spinner"
+    >
+    <% } else { %>
     <button
       class="canteen-chooser-card"
       hx-post="/api/velg-bedrift"
@@ -11,6 +20,7 @@
       hx-target="#search-results"
       hx-indicator="#search-spinner"
     >
+    <% } %>
       <span class="canteen-chooser-card-name"><%= c.canteenName || c.street %></span>
       <% if (c.canteenName) { %>
         <span class="canteen-chooser-card-address"><%= c.street %></span>
@@ -30,6 +40,32 @@
     <% } else { %>
     <h4>Kantine i <%= street %></h4>
     <% } %>
+    <% if (typeof manualAddress !== 'undefined' && manualAddress) { %>
+    <form
+      action="/api/legg-til-kantine"
+      method="post"
+      hx-post="/api/legg-til-kantine"
+      hx-target="#search-results"
+      hx-indicator="#search-spinner"
+    >
+      <input type="hidden" name="companyName" value="<%= companyName %>">
+      <input type="hidden" name="street" value="<%= manualAddress.street %>">
+      <input type="hidden" name="postalCode" value="<%= manualAddress.postalCode %>">
+      <input type="hidden" name="city" value="<%= manualAddress.city %>">
+      <input type="hidden" name="canteenChoice" value="new">
+      <label for="canteenName" class="form-label">Kantinens plassering / navn</label>
+      <input
+        type="text"
+        id="canteenName"
+        name="canteenName"
+        placeholder="f.eks. «2. etasje» eller «Bygg B»"
+        class="form-input"
+        maxlength="100"
+        <%= canteens.length > 0 ? 'required' : '' %>
+      >
+      <button type="submit" class="btn btn-primary"><%= canteens.length > 0 ? 'Opprett ny kantine' : 'Gå videre' %></button>
+    </form>
+    <% } else { %>
     <form
       action="/api/velg-bedrift"
       method="post"
@@ -51,5 +87,6 @@
       >
       <button type="submit" class="btn btn-primary"><%= canteens.length > 0 ? 'Opprett ny kantine' : 'Gå videre' %></button>
     </form>
+    <% } %>
   </div>
 </div>
