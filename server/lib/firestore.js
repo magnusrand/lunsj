@@ -467,6 +467,20 @@ async function getTopCanteens(limit = 6) {
 }
 
 /**
+ * Get top rated canteens by average rating (minimum 2 reviews).
+ */
+async function getTopRatedCanteens(limit = 6) {
+  const snapshot = await db()
+    .collection("canteens")
+    .where("totalReviews", ">=", 2)
+    .orderBy("averageRating", "desc")
+    .limit(limit)
+    .get();
+
+  return snapshot.docs.map((doc) => doc.data());
+}
+
+/**
  * Get recent reviews across all canteens (collection group query).
  */
 async function getRecentReviews(limit = 8) {
@@ -548,6 +562,7 @@ module.exports = {
   getReviewByClientId,
   updateReview,
   getTopCanteens,
+  getTopRatedCanteens,
   getRecentReviews,
   getCanteensAtAddress,
   getNextCanteenKey,

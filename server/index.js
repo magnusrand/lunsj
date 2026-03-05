@@ -19,6 +19,7 @@ const {
   getReviewByClientId,
   updateReview,
   getTopCanteens,
+  getTopRatedCanteens,
   getRecentReviews,
   getCanteensAtAddress,
   getNextCanteenKey,
@@ -86,11 +87,14 @@ function redirectToCanteen(req, res, addressKey, query) {
 // Landing page
 expressApp.get("/", async (req, res) => {
   try {
-    const topCanteens = await getTopCanteens(6);
-    res.render("index", { topCanteens });
+    const [topCanteens, topRatedCanteens] = await Promise.all([
+      getTopCanteens(6),
+      getTopRatedCanteens(6),
+    ]);
+    res.render("index", { topCanteens, topRatedCanteens });
   } catch (err) {
     console.error("Error loading landing page:", err);
-    res.render("index", { topCanteens: [] });
+    res.render("index", { topCanteens: [], topRatedCanteens: [] });
   }
 });
 
