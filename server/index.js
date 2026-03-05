@@ -88,8 +88,8 @@ function redirectToCanteen(req, res, addressKey, query) {
 expressApp.get("/", async (req, res) => {
   try {
     const [topCanteens, topRatedCanteens] = await Promise.all([
-      getTopCanteens(6),
-      getTopRatedCanteens(6),
+      getTopCanteens(6).catch((e) => { console.error("getTopCanteens error:", e); return []; }),
+      getTopRatedCanteens(6).catch((e) => { console.error("getTopRatedCanteens error:", e); return []; }),
     ]);
     res.render("index", { topCanteens, topRatedCanteens });
   } catch (err) {
