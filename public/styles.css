@@ -390,6 +390,30 @@ h3 {
   color: var(--text-light);
 }
 
+.canteen-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin-top: 0.4rem;
+}
+
+.canteen-card-tag {
+  font-size: 0.7rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  padding: 0.1rem 0.4rem;
+  border-radius: 999px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 10rem;
+}
+
+.canteen-card-tag--more {
+  color: var(--text-light);
+}
+
 /* === Stars (readonly) === */
 .stars {
   display: inline-flex;

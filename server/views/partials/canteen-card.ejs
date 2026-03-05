@@ -10,4 +10,14 @@
     <p class="canteen-card-city"><%= canteen.postalCode %> <%= canteen.city %></p>
   <% } %>
   <p class="canteen-card-reviews"><%= canteen.totalReviews %> anmeldelse<%= canteen.totalReviews !== 1 ? 'r' : '' %></p>
+  <% if (canteen.companies && canteen.companies.length > 0) { %>
+  <div class="canteen-card-tags">
+    <% const maxTags = 3; canteen.companies.slice(0, maxTags).forEach(c => { %>
+      <span class="canteen-card-tag"><%= c.name %></span>
+    <% }) %>
+    <% if (canteen.companies.length > maxTags) { %>
+      <span class="canteen-card-tag canteen-card-tag--more">+<%= canteen.companies.length - maxTags %></span>
+    <% } %>
+  </div>
+  <% } %>
 </a>
