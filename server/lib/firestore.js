@@ -473,11 +473,15 @@ async function getTopRatedCanteens(limit = 6) {
   const snapshot = await db()
     .collection("canteens")
     .where("totalReviews", ">=", 2)
+    .orderBy("totalReviews")
     .orderBy("averageRating", "desc")
-    .limit(limit)
+    .limit(limit * 3)
     .get();
 
-  return snapshot.docs.map((doc) => doc.data());
+  return snapshot.docs
+    .map((doc) => doc.data())
+    .sort((a, b) => b.averageRating - a.averageRating)
+    .slice(0, limit);
 }
 
 /**
